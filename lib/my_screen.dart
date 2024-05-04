@@ -1,9 +1,8 @@
+// my_screen.dart
+
 import 'package:flutter/material.dart';
-import 'package:flutter_dog/favoritenpage/favoriten_screen.dart';
-import 'package:flutter_dog/gallerypage/gallery_page.dart';
+import 'package:flutter_dog/loginpage/login_screen.dart';
 import 'package:flutter_dog/registrationpage/registrations_screen.dart';
-import 'loginpage/login_screen.dart';
-import 'emergencypage/emergency_contact_screen.dart'; 
 
 class MyScreen extends StatelessWidget {
   const MyScreen({super.key});
@@ -39,36 +38,6 @@ class MyScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => const RegistrationScreen()),
-                );
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Emergency Kontakt'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const EmergencyContactScreen(contactName: '')),
-                );
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Gallery'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const GalleryPage()),
-                );
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Favoriten'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const FavoriteScreen()),
                 );
               },
             ),

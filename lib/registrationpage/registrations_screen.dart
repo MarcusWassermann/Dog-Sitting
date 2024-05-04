@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dog/profilepage/createprofile_screen.dart';
+import 'package:flutter_dog/appwaypage/app_way_page.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -61,7 +61,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ),
             const SizedBox(height: 16.0),
             _buildTextField(
-              'Passwort',
+              'Passwort (mind. 8 Zeichen, 1 Großbuchstabe, 1 Zahl, 1 Sonderzeichen)',
               obscureText: true,
               controller: _passwordController,
             ),
@@ -137,34 +137,51 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
         ),
         onPressed: () {
-          // Check if all fields are filled before navigating
-          if (_usernameController.text.isNotEmpty &&
-              _emailController.text.isNotEmpty &&
-              _passwordController.text.isNotEmpty) {
-            // Clear text fields after registration button pressed
-            _usernameController.clear();
-            _emailController.clear();
-            _passwordController.clear();
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const CreateProfileScreen(),
-              ),
-            );
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Profil erfolgreich erstellt!'),
-              ),
-            );
-          } else {
+          // Überprüfen, ob alle Felder ausgefüllt sind
+          if (_usernameController.text.isEmpty ||
+              _emailController.text.isEmpty ||
+              _passwordController.text.isEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Bitte fülle alle Felder aus.'),
               ),
             );
+            return;
           }
+
+          // Überprüfen, ob die E-Mail-Adresse gültig ist
+          if (!_isValidEmail(_emailController.text)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Bitte gib eine gültige E-Mail-Adresse ein.'),
+              ),
+            );
+            return;
+          }
+
+          // Überprüfen, ob das Passwort die Mindestanforderungen erfüllt
+          if (!_isValidPassword(_passwordController.text)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                    'Das Passwort muss mindestens 8 Zeichen lang sein und mindestens einen Großbuchstaben, eine Zahl und ein Sonderzeichen enthalten.'),
+              ),
+            );
+            return;
+          }
+
+          // Textfelder nach dem Drücken der Registrierungsschaltfläche leeren
+          _usernameController.clear();
+          _emailController.clear();
+          _passwordController.clear();
+
+          // Nach erfolgreicher Registrierung zur AppWayScreen navigieren
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AppWayScreen(),
+            ),
+          );
         },
         child: const Text(
           'Registrieren',
@@ -172,5 +189,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
       ),
     );
+  }
+
+  bool _isValidEmail(String email) {
+    // Einfache Überprüfung, ob die E-Mail-Adresse eine gültige Form hat
+    // Diese Überprüfung kann erweitert werden, um eine strengere Validierung durchzuführen
+    return email.contains('@');
+  }
+
+  bool _isValidPassword(String password) {
+    // Überprüfen, ob das Passwort mindestens 8 Zeichen lang ist
+    if (password.length < 8) return false;
+
+    // Überprüfen, ob das Passwort mindestens einen Großbuchstaben, eine Zahl und ein Sonderzeichen enthält
+    final hasUppercase = password.contains(RegExp(r'[A-Z]'));
+    final hasDigits = password.contains(RegExp(r'[0-9]'));
+    final hasSpecialCharacters =
+        password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+
+    return hasUppercase && hasDigits && hasSpecialCharacters;
   }
 }

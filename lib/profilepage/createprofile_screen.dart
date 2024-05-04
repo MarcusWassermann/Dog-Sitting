@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dog/custompage/custom_list_view.dart';
-
+import 'package:flutter_dog/adventisement/adventisement_page.dart';
 class CreateProfileScreen extends StatelessWidget {
   const CreateProfileScreen({super.key});
 
@@ -62,7 +61,8 @@ class CreateProfileScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const CustomListViewScreen()),
+                          builder: (context) =>
+                              const AdvertisementPage()), // Hier wird zur AdvertisementPage navigiert
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(

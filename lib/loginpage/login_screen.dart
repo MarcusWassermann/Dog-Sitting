@@ -1,10 +1,10 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import '../chatpage/chat_screen.dart';
+import 'package:flutter_dog/appwaypage/app_way_page.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key});
+  const LoginScreen({super.key});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -25,9 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
     // Einlogik implementieren
     if (_usernameController.text == 'example' &&
         _passwordController.text == 'password') {
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const ChatPage()),
+        MaterialPageRoute(builder: (context) => const AppWayScreen()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
