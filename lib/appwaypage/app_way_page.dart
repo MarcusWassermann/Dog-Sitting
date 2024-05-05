@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dog/adventisement/adventisement_page.dart';
+import 'package:flutter_dog/chatpage/chat_screen.dart';
 import 'package:flutter_dog/favoritenpage/favoriten_screen.dart';
 import 'package:flutter_dog/gallerypage/gallery_page.dart';
 import 'package:flutter_dog/profilepage/createprofile_screen.dart';
@@ -60,6 +61,13 @@ class AppWayScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const GalleryPage()),
+            );
+          }),
+          _buildCategoryButton(context, 'Chat', () {
+            // Neu hinzugefügt
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ChatScreen()),
             );
           }),
           // Weitere Kategorien können hier hinzugefügt werden

@@ -1,7 +1,17 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 
-class ChatPage extends StatelessWidget {
-  const ChatPage({super.key});
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({super.key});
+
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  final TextEditingController _messageController = TextEditingController();
+  final List<String> _messages = [];
 
   @override
   Widget build(BuildContext context) {
@@ -12,15 +22,11 @@ class ChatPage extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: ListView(
-              children: [
-                _buildMessage(isMe: false, message: 'Hallo! Wie geht es dir?'),
-                _buildMessage(
-                    isMe: true, message: 'Hallo! Mir geht es gut, danke!'),
-                _buildMessage(isMe: false, message: 'Das freut mich zu hören!'),
-                _buildMessage(isMe: true, message: 'Ja, danke!'),
-                _buildMessage(isMe: false, message: 'Was machst du gerade?'),
-              ],
+            child: ListView.builder(
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                return _buildMessage(_messages[index]);
+              },
             ),
           ),
           _buildInputField(),
@@ -29,20 +35,20 @@ class ChatPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMessage({required bool isMe, required String message}) {
+  Widget _buildMessage(String message) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Align(
-        alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+        alignment: Alignment.centerLeft,
         child: Container(
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
-            color: isMe ? Colors.blue : Colors.grey.shade300,
+            color: Colors.grey.shade300,
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: Text(
             message,
-            style: TextStyle(color: isMe ? Colors.white : Colors.black),
+            style: const TextStyle(color: Colors.black),
           ),
         ),
       ),
@@ -56,10 +62,11 @@ class ChatPage extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
-              decoration: InputDecoration(
+              controller: _messageController,
+              decoration: const InputDecoration(
                 hintText: 'Nachricht eingeben...',
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
+                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
                 ),
               ),
             ),
@@ -67,7 +74,7 @@ class ChatPage extends StatelessWidget {
           const SizedBox(width: 12.0),
           IconButton(
             onPressed: () {
-              // Send message functionality
+              _sendMessage(_messageController.text);
             },
             icon: const Icon(Icons.send),
           ),
@@ -75,5 +82,13 @@ class ChatPage extends StatelessWidget {
       ),
     );
   }
-}
 
+  void _sendMessage(String message) {
+    if (message.isNotEmpty) {
+      setState(() {
+        _messages.add(message);
+      });
+      _messageController.clear();
+    }
+  }
+}

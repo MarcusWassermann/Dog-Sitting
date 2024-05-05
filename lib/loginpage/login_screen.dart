@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dog/appwaypage/app_way_page.dart';
+import 'package:flutter_dog/loginpage/login_form.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,8 +12,15 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  late final TextEditingController _usernameController;
+  late final TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
 
   @override
   void dispose() {
@@ -52,73 +60,17 @@ class _LoginScreenState extends State<LoginScreen> {
           },
         ),
       ),
-      body: Container(
-        padding: const EdgeInsets.all(20),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 50,
-                width: 200,
-                child: TextField(
-                  controller: _usernameController,
-                  decoration: InputDecoration(
-                    labelText: 'Benutzername',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                  height:
-                      10), // Abstand zwischen den Textfeldern und dem Button
-              SizedBox(
-                height: 50,
-                width: 200,
-                child: TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Passwort',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  obscureText: true,
-                ),
-              ),
-              const SizedBox(
-                  height:
-                      10), // Abstand zwischen dem letzten Textfeld und dem Button
-              ElevatedButton(
-                onPressed: () {
-                  _login();
-                  _usernameController.clear(); // Benutzername leeren
-                  _passwordController.clear(); // Passwort leeren
-                },
-                child: const Text('Einloggen'),
-              ),
-              const SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Passwort vergessen?'),
-                    ),
-                  );
-                },
-                child: const Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Passwort vergessen?',
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      body: LoginForm(
+        usernameController: _usernameController,
+        passwordController: _passwordController,
+        onLogin: _login,
+        onForgotPassword: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Passwort vergessen?'),
+            ),
+          );
+        },
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,

@@ -1,135 +1,63 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
-import 'package:flutter_dog/adventisement/adventisement_page.dart';
-class CreateProfileScreen extends StatelessWidget {
+import 'package:flutter_dog/profilepage/create_profile_form.dart';
+
+class CreateProfileScreen extends StatefulWidget {
   const CreateProfileScreen({super.key});
+
+  @override
+  _CreateProfileScreenState createState() => _CreateProfileScreenState();
+}
+
+class _CreateProfileScreenState extends State<CreateProfileScreen> {
+  late final TextEditingController _firstNameController;
+  late final TextEditingController _lastNameController;
+  late final TextEditingController _ageController;
+  late final TextEditingController _phoneNumberController;
+  late final TextEditingController _emailController;
+
+  @override
+  void initState() {
+    super.initState();
+    _firstNameController = TextEditingController();
+    _lastNameController = TextEditingController();
+    _ageController = TextEditingController();
+    _phoneNumberController = TextEditingController();
+    _emailController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _ageController.dispose();
+    _phoneNumberController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text(''),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        title: const Text('Profil erstellen'),
       ),
-      body: GestureDetector(
-        onTap: () {
-          // Hier könnten Sie zusätzliche Aktionen ausführen, wenn auf den Bildschirm getippt wird
-        },
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Erstelle dein Profil',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                _buildProfileImage(context),
-                const SizedBox(height: 16.0),
-                _buildProfileTextField('Vorname', width: 300.0, height: 50.0),
-                const SizedBox(height: 16.0),
-                _buildProfileTextField('Nachname', width: 300.0, height: 50.0),
-                const SizedBox(height: 16.0),
-                _buildProfileTextField('Alter', width: 100.0, height: 50.0),
-                const SizedBox(height: 16.0),
-                _buildProfileTextField('Telefonnummer',
-                    width: 200.0, height: 50.0),
-                const SizedBox(height: 16.0),
-                _buildProfileTextField('E-Mail', width: 300.0, height: 50.0),
-                const SizedBox(height: 16.0),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: () {
-                    // Hier könnte die Logik für die Profilerstellung stehen
-                    // Beispiel: Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const AdvertisementPage()), // Hier wird zur AdvertisementPage navigiert
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Profil erfolgreich erstellt!'),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    'Profil erstellen',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+      body: CreateProfileForm(
+        firstNameController: _firstNameController,
+        lastNameController: _lastNameController,
+        ageController: _ageController,
+        phoneNumberController: _phoneNumberController,
+        emailController: _emailController,
+        onSave: _saveUserProfile,
       ),
     );
   }
 
-  Widget _buildProfileTextField(
-    String labelText, {
-    double width = 300.0,
-    double height = 50.0,
-  }) {
-    return SizedBox(
-      width: width,
-      height: height,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.grey),
-        ),
-        child: TextField(
-          style: const TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            labelText: labelText,
-            labelStyle: const TextStyle(color: Colors.black),
-            border: InputBorder.none,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProfileImage(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // Hier könnte die Logik zum Hochladen eines Bildes stehen
-      },
-      child: Container(
-        width: 100,
-        height: 100,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.grey),
-        ),
-        child: const Center(
-          child: Icon(
-            Icons.person,
-            size: 50,
-            color: Colors.black,
-          ),
-        ),
+  void _saveUserProfile() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Profil erfolgreich erstellt!'),
       ),
     );
   }

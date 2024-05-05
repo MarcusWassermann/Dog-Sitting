@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dog/data/mydatabase.dart';
 
-void main() async {
+void performDatabaseOperations() async {
   final database = MyDatabase.instance;
 
   // Ein Datensatz einfügen
@@ -18,7 +18,6 @@ void main() async {
   final rowsDeleted = await database.delete('my_table', id);
 
   if (kDebugMode) {
-    print(
-      'Rows deleted: $rowsDeleted');
+    print('Rows deleted: $rowsDeleted');
   } // Zeigen Sie die Anzahl der gelöschten Zeilen an
 }
