@@ -20,18 +20,33 @@ class HomeScreen extends StatelessWidget {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/1423213-3715587.jpg'),
-            fit: BoxFit.cover,
+            fit: BoxFit.cover, // Bildgröße anpassen
+            alignment: Alignment(
+                0.3, -0.5), // Horizontal: 0.5 (Mitte), Vertikal: -0.5 (oben)
           ),
         ),
-        child: const Center(
-          child: Text(
-            'Dog Sitting',
-            style: TextStyle(
-              fontSize: 48.0,
-              color: Color.fromARGB(255, 27, 24, 24),
-              fontFamily: 'YourCurvedFont',
+        width: double
+            .infinity, // Bild über die gesamte Breite des Bildschirms strecken
+        height: double
+            .infinity, // Bild über die gesamte Höhe des Bildschirms strecken
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 100, 
             ),
-          ),
+            Center(
+              child: Text(
+                'Dog Sitting',
+                style: TextStyle(
+                  fontSize: 34.0, // Adjust the font size as needed
+                  color: Color.fromARGB(255, 27, 24, 24),
+                  fontFamily: 'YourOtherFont', // Anderes Schriftart
+                  fontWeight: FontWeight.bold, // Fettschrift
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

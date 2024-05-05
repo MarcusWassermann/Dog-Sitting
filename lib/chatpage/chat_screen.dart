@@ -18,6 +18,14 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              _clearMessages();
+            },
+            icon: const Icon(Icons.delete),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -90,5 +98,34 @@ class _ChatScreenState extends State<ChatScreen> {
       });
       _messageController.clear();
     }
+  }
+
+  void _clearMessages() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Nachrichten löschen'),
+          content: const Text('Möchtest du wirklich alle Nachrichten löschen?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Abbrechen'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _messages.clear();
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text('Löschen'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

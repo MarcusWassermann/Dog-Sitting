@@ -8,7 +8,8 @@ class CreateProfileForm extends StatelessWidget {
   final TextEditingController emailController;
   final VoidCallback onSave;
 
-  const CreateProfileForm({super.key, 
+  const CreateProfileForm({
+    super.key,
     required this.firstNameController,
     required this.lastNameController,
     required this.ageController,
@@ -30,48 +31,44 @@ class CreateProfileForm extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Erstelle dein Profil',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                const CircleAvatar(
+                  backgroundColor: Colors.grey, // Hier kann ein Icon oder ein Bild verwendet werden
+                  radius: 50, // Hintergrundfarbe des Avatars
+                  child: Icon(Icons
+                      .person),
                 ),
-                const SizedBox(height: 16.0),
-                // Hier könnten Sie das Profilbild hinzufügen
                 const SizedBox(height: 16.0),
                 _buildProfileTextField(
                   'Vorname',
-                  width: 300.0,
                   controller: firstNameController,
+                  width: 300.0,
                 ),
                 const SizedBox(height: 16.0),
                 _buildProfileTextField(
                   'Nachname',
-                  width: 300.0,
                   controller: lastNameController,
+                  width: 300.0,
                 ),
                 const SizedBox(height: 16.0),
                 _buildProfileTextField(
                   'Alter',
-                  width: 100.0,
                   controller: ageController,
                   keyboardType: TextInputType.number,
+                  width: 100.0,
                 ),
                 const SizedBox(height: 16.0),
                 _buildProfileTextField(
                   'Telefonnummer',
-                  width: 200.0,
                   controller: phoneNumberController,
                   keyboardType: TextInputType.phone,
+                  width: 200.0,
                 ),
                 const SizedBox(height: 16.0),
                 _buildProfileTextField(
                   'E-Mail',
-                  width: 300.0,
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
+                  width: 300.0,
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
@@ -88,9 +85,9 @@ class CreateProfileForm extends StatelessWidget {
 
   Widget _buildProfileTextField(
     String labelText, {
-    required double width,
     required TextEditingController controller,
     TextInputType? keyboardType,
+    required double width,
   }) {
     return SizedBox(
       width: width,
