@@ -1,8 +1,9 @@
 // my_screen.dart
 
+import 'package:dogs_sitting/loginpage/login_screen.dart';
+import 'package:dogs_sitting/registrationpage/registrations_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dog/loginpage/login_screen.dart';
-import 'package:flutter_dog/registrationpage/registrations_screen.dart';
+
 
 class MyScreen extends StatelessWidget {
   const MyScreen({super.key});

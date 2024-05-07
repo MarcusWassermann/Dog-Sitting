@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_null_comparison
 
+import 'package:dogs_sitting/profilepage/createprofile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dog/profilepage/createprofile_screen.dart';
 import '../loginpage/login_screen.dart';
 import '../registrationpage/registrations_screen.dart';
 

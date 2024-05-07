@@ -1,8 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dog/appwaypage/app_way_page.dart';
-import 'package:flutter_dog/loginpage/login_form.dart';
+import 'package:dogs_sitting/appwaypage/app_way_page.dart';
+import 'package:dogs_sitting/loginpage/login_form.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,21 +30,45 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _login() {
-    // Einlogik implementieren
-    if (_usernameController.text == 'example' &&
-        _passwordController.text == 'password') {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const AppWayScreen()),
-      );
+    final String username = _usernameController.text;
+    final String password = _passwordController.text;
+
+    if (username.isNotEmpty && password.isNotEmpty) {
+      // Hier können Sie Ihre eigene Anmeldeüberprüfung implementieren
+      // Zum Beispiel: Überprüfen Sie die Anmeldeinformationen in einer Datenbank oder einem Authentifizierungsdienst
+      // In diesem Beispiel wird eine einfache Überprüfung mit festen Benutzerdaten durchgeführt
+      if (username == 'example' && password == 'password') {
+        // Wenn die Anmeldeinformationen korrekt sind, navigieren Sie zum Hauptbildschirm
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AppWayScreen()),
+        );
+      } else {
+        // Wenn die Anmeldeinformationen falsch sind, zeigen Sie eine Fehlermeldung an
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                'Einloggen fehlgeschlagen! Benutzername oder Passwort ist falsch.'),
+          ),
+        );
+      }
     } else {
+      // Wenn Benutzername oder Passwort leer sind, zeigen Sie eine Fehlermeldung an
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-              'Einloggen fehlgeschlagen! Benutzername oder Passwort ist falsch.'),
+          content: Text('Benutzername und Passwort dürfen nicht leer sein.'),
         ),
       );
     }
+  }
+
+  void _forgotPassword() {
+    // Hier können Sie die Logik für das Zurücksetzen des Passworts implementieren
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Passwort vergessen?'),
+      ),
+    );
   }
 
   @override
@@ -64,13 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
         usernameController: _usernameController,
         passwordController: _passwordController,
         onLogin: _login,
-        onForgotPassword: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Passwort vergessen?'),
-            ),
-          );
-        },
+        onForgotPassword: _forgotPassword,
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,

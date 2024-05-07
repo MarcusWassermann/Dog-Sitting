@@ -1,3 +1,5 @@
+// create_profile_form.dart
+
 import 'package:flutter/material.dart';
 
 class CreateProfileForm extends StatelessWidget {
@@ -32,10 +34,10 @@ class CreateProfileForm extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const CircleAvatar(
-                  backgroundColor: Colors.grey, // Hier kann ein Icon oder ein Bild verwendet werden
+                  backgroundColor: Colors
+                      .grey, // Hier kann ein Icon oder ein Bild verwendet werden
                   radius: 50, // Hintergrundfarbe des Avatars
-                  child: Icon(Icons
-                      .person),
+                  child: Icon(Icons.person),
                 ),
                 const SizedBox(height: 16.0),
                 _buildProfileTextField(

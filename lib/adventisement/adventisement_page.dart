@@ -1,9 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dog/models/user_text.dart';
-import 'package:flutter_dog/provider/user_text_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class AdvertisementPage extends StatelessWidget {
   const AdvertisementPage({super.key});
@@ -28,11 +30,17 @@ class AdvertisementForm extends StatefulWidget {
 
 class _AdvertisementFormState extends State<AdvertisementForm> {
   late TextEditingController _textEditingController;
+  late FirebaseFirestore _firestore;
+  late FirebaseStorage _storage;
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
 
   @override
   void initState() {
     super.initState();
     _textEditingController = TextEditingController();
+    _firestore = FirebaseFirestore.instance;
+    _storage = FirebaseStorage.instance;
   }
 
   @override
@@ -41,13 +49,32 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
     super.dispose();
   }
 
-  void _saveText() {
+  void _saveData() async {
     String enteredText = _textEditingController.text;
     if (enteredText.isNotEmpty) {
-      UserText userText = UserText(enteredText);
-      Provider.of<UserTextProvider>(context, listen: false)
-          .addUserText(userText);
+      // Daten in Firestore speichern
+      await _firestore.collection('advertisements').add({'text': enteredText});
       _textEditingController.clear();
+    }
+  }
+
+  void _uploadImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = pickedFile;
+    });
+    if (_image != null) {
+      File imageFile = File(_image!.path);
+      Reference storageRef = _storage
+          .ref()
+          .child('images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      UploadTask uploadTask = storageRef.putFile(imageFile);
+      await uploadTask.whenComplete(() async {
+        String imageUrl = await storageRef.getDownloadURL();
+        if (kDebugMode) {
+          print('Uploaded image URL: $imageUrl');
+        }
+      });
     }
   }
 
@@ -59,7 +86,7 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 200, // Anpassen der Höhe des Bild-Containers
+            height: 200,
             child: TextField(
               controller: _textEditingController,
               keyboardType: TextInputType.multiline,
@@ -69,34 +96,20 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 labelText: 'Text eingeben',
-                prefixIcon: Container(
-                  width: 50, // Anpassen der Breite des Bild-Containers
-                  height: 50, // Anpassen der Höhe des Bild-Containers
-                  margin: const EdgeInsets.only(right: 10.0),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(10.0),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/image.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
               ),
             ),
           ),
           const SizedBox(height: 20.0),
           ElevatedButton(
-            onPressed: _saveText,
+            onPressed: _saveData,
             child: const Text('Daten speichern'),
           ),
           const SizedBox(height: 20.0),
           ElevatedButton(
-            onPressed: () {
-              // Hier den Code zum Hochladen des Bildes einfügen
-            },
+            onPressed: _uploadImage,
             child: const Text('Bild hochladen'),
           ),
+          if (_image != null) Image.file(File(_image!.path)),
         ],
       ),
     );

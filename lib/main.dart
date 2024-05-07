@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dog/provider/auth_ptovider.dart';
-import 'package:flutter_dog/provider/favoriten_provider.dart';
-import 'package:flutter_dog/provider/user_text_provider.dart';
-import 'package:flutter_dog/home/home_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:dogs_sitting/home/home_screen.dart';
+import 'package:dogs_sitting/provider/auth_ptovider.dart';
+import 'package:dogs_sitting/provider/favoriten_provider.dart';
+import 'package:dogs_sitting/provider/user_text_provider.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     MultiProvider(
       providers: [

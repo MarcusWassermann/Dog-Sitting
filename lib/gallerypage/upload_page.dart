@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_core/firebase_core.dart'; // Firebase-Core hinzugefügt
 
 class UploadPage extends StatelessWidget {
   const UploadPage({super.key});
@@ -13,8 +14,7 @@ class UploadPage extends StatelessWidget {
       230.0; //  Position des Texts von oben festlegen
   final double buttonPositionBottom =
       300.0; //  Abstand zum unteren Rand des Bildschirms festlegen
-  final double buttonWidth =
-      180.0; //  Breite des Buttons festlegen
+  final double buttonWidth = 180.0; //  Breite des Buttons festlegen
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +41,9 @@ class UploadPage extends StatelessWidget {
 
                 if (pickedFile != null) {
                   File image = File(pickedFile.path);
+                  // Firebase Firestore Code hinzugefügt
+                  await uploadImageToFirestore(
+                      image); // Hochladen des Bildes in Firestore
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Bild aufgenommen: ${image.path}')),
                   );
@@ -79,6 +82,9 @@ class UploadPage extends StatelessWidget {
 
                 if (pickedFile != null) {
                   File image = File(pickedFile.path);
+                  // Firebase Firestore Code hinzugefügt
+                  await uploadImageToFirestore(
+                      image); // Hochladen des Bildes in Firestore
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Bild ausgewählt: ${image.path}')),
                   );
@@ -96,5 +102,18 @@ class UploadPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> uploadImageToFirestore(File image) async {
+    // Firebase-Initialisierung
+    await Firebase.initializeApp();
+
+    // Hier implementieren Sie die Logik zum Hochladen des Bildes in Firestore
+    // Sie können die Firebase Firestore API verwenden, um Daten hochzuladen.
+    // Hier ist ein Beispielcode, wie Sie ein Bild in Firestore hochladen können:
+    // final FirebaseStorage storage = FirebaseStorage.instance;
+    // final Reference storageRef = storage.ref().child('images/${image.path.split('/').last}');
+    // final UploadTask uploadTask = storageRef.putFile(image);
+    // await uploadTask.whenComplete(() => print('Bild hochgeladen'));
   }
 }

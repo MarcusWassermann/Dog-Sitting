@@ -1,14 +1,11 @@
-// app_way_screen.dart
-
+import 'package:dogs_sitting/adventisement/adventisement_page.dart';
+import 'package:dogs_sitting/chatpage/chat_screen.dart';
+import 'package:dogs_sitting/emergencypage/emergency_contact_screen.dart';
+import 'package:dogs_sitting/favoritenpage/favoriten_screen.dart';
+import 'package:dogs_sitting/gallerypage/gallery_page.dart';
+import 'package:dogs_sitting/profilepage/createprofile_screen.dart';
+import 'package:dogs_sitting/settingpage/settings_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dog/adventisement/adventisement_page.dart';
-import 'package:flutter_dog/chatpage/chat_screen.dart';
-import 'package:flutter_dog/favoritenpage/favoriten_screen.dart';
-import 'package:flutter_dog/gallerypage/gallery_page.dart';
-import 'package:flutter_dog/profilepage/createprofile_screen.dart';
-import 'package:flutter_dog/settingpage/settings_page.dart';
-import 'package:flutter_dog/emergencypage/emergency_contact_screen.dart';
-
 
 class AppWayScreen extends StatelessWidget {
   const AppWayScreen({super.key});
@@ -25,8 +22,7 @@ class AppWayScreen extends StatelessWidget {
           _buildCategoryButton(context, 'Favoriten', () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => const FavoriteScreen(favorites: [])),
+              MaterialPageRoute(builder: (context) => const FavoriteScreen()),
             );
           }),
           _buildCategoryButton(context, 'Einstellungen', () {
@@ -64,7 +60,6 @@ class AppWayScreen extends StatelessWidget {
             );
           }),
           _buildCategoryButton(context, 'Chat', () {
-            // Neu hinzugefügt
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const ChatScreen()),

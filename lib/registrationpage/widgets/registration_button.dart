@@ -1,13 +1,15 @@
+
+
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final String text;
+  final VoidCallback? onPressed; // onPressed kann null sein
+  final String text; // Definieren Sie den Parameter text
 
   const CustomButton({
     super.key,
     required this.onPressed,
-    required this.text,
+    required this.text, // Fügen Sie den Parameter text hinzu
   });
 
   @override
@@ -21,9 +23,9 @@ class CustomButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
-        onPressed: onPressed,
+        onPressed: onPressed, // onPressed kann null sein
         child: Text(
-          text,
+          text, // Verwenden Sie den Parameter text
           style: const TextStyle(color: Colors.white),
         ),
       ),

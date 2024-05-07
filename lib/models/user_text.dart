@@ -6,4 +6,6 @@ class UserText {
   bool isApproved;
 
   UserText(this.text, {this.imagePath, this.isApproved = false});
+
+  String? get id => null;
 }

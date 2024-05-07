@@ -1,5 +1,6 @@
+import 'package:dogs_sitting/models/user_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dog/models/user_text.dart';
+
 
 class UserTextProvider extends ChangeNotifier {
   final List<UserText> _userTexts = [];

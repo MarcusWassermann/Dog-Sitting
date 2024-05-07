@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "58146578159",
+    "project_id": "dog-sitting-8cdbd",
+    "storage_bucket": "dog-sitting-8cdbd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58146578159:android:cc7e6a058ccee6acb9451a",
+        "android_client_info": {
+          "package_name": "com.example.flutter_dog"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbkjJuz5SfQ3Emt2jXDeeaASqDUd2cSEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

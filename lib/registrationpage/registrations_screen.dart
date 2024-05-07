@@ -1,5 +1,6 @@
+import 'package:dogs_sitting/registrationpage/registration_form.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dog/registrationpage/registration_form.dart';
+import 'package:dogs_sitting/appwaypage/app_way_page.dart';
 
 
 class RegistrationScreen extends StatelessWidget {
@@ -18,30 +19,21 @@ class RegistrationScreen extends StatelessWidget {
           },
         ),
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: RegistrationForm(),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: const Color.fromARGB(255, 252, 252, 252),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.home,
-                color: Color.fromARGB(255, 5, 5, 5),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: RegistrationForm(
+          onRegistrationSuccess: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Erfolgreich registriert!'),
+                duration: Duration(seconds: 2),
               ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                color: Color.fromARGB(255, 0, 0, 0),
-              ),
-            ),
-          ],
+            );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const AppWayScreen()),
+            );
+          },
         ),
       ),
     );

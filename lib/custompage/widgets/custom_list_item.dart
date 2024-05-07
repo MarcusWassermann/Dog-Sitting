@@ -1,39 +1,10 @@
 // ignore_for_file: collection_methods_unrelated_type
 
+import 'package:flutter/material.dart';
 import 'package:dogs_sitting/models/user_text.dart';
 import 'package:dogs_sitting/provider/favoriten_provider.dart';
-import 'package:dogs_sitting/provider/user_text_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-class CustomListViewScreen extends StatelessWidget {
-  const CustomListViewScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final List<UserText> userTexts =
-        Provider.of<UserTextProvider>(context).userTexts;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Custom ListView'),
-      ),
-      body: ListView.separated(
-        itemCount: userTexts.length,
-        separatorBuilder: (BuildContext context, int index) =>
-            const SizedBox(height: 16),
-        itemBuilder: (BuildContext context, int index) {
-          final UserText userText = userTexts[index];
-          if (userText.text.isNotEmpty) {
-            return CustomListItem(userText: userText);
-          } else {
-            return const SizedBox.shrink(); //  leere Anzeigen nicht anzeigen
-          }
-        },
-      ),
-    );
-  }
-}
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CustomListItem extends StatelessWidget {
   final UserText userText;
@@ -68,13 +39,21 @@ class CustomListItem extends StatelessWidget {
               isFavorite ? Icons.favorite : Icons.favorite_outline,
               color: isFavorite ? Colors.red : Colors.grey,
             ),
-            onPressed: () {
+            onPressed: () async {
               final FavoriteProvider favoriteProvider =
                   Provider.of<FavoriteProvider>(context, listen: false);
+              final FirebaseFirestore firestore = FirebaseFirestore.instance;
+              final CollectionReference favorites =
+                  firestore.collection('favorites');
+
               if (isFavorite) {
-                favoriteProvider.removeFromFavorites(userText as String);
+                // Remove from favorites
+                await favorites.doc(userText.id).delete();
+                favoriteProvider.removeFromFavorites(userText.text);
               } else {
-                favoriteProvider.addToFavorites(userText as String);
+                // Add to favorites
+                await favorites.doc(userText.id).set({'text': userText.text});
+                favoriteProvider.addToFavorites(userText.text);
               }
             },
           ),

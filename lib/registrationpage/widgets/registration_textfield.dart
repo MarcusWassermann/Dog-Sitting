@@ -1,4 +1,4 @@
-// text_field.dart
+// registration_textfield.dart
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -12,7 +12,7 @@ class CustomTextField extends StatelessWidget {
     required this.labelText,
     this.keyboardType,
     this.obscureText = false,
-    this.controller,
+    this.controller, required void Function(dynamic _) onChanged,
   });
 
   @override
