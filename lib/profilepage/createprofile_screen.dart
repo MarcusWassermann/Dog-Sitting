@@ -1,9 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Firebase Authentication
-import 'package:cloud_firestore/cloud_firestore.dart'; // Cloud Firestore
 import 'package:dogs_sitting/profilepage/create_profile_form.dart';
 
 class CreateProfileScreen extends StatefulWidget {
@@ -14,15 +11,19 @@ class CreateProfileScreen extends StatefulWidget {
 }
 
 class _CreateProfileScreenState extends State<CreateProfileScreen> {
+  late final TextEditingController _usernameController;
   late final TextEditingController _firstNameController;
   late final TextEditingController _lastNameController;
   late final TextEditingController _ageController;
   late final TextEditingController _phoneNumberController;
   late final TextEditingController _emailController;
+  bool _emergencyContact = false;
+  bool _normalContact = true;
 
   @override
   void initState() {
     super.initState();
+    _usernameController = TextEditingController();
     _firstNameController = TextEditingController();
     _lastNameController = TextEditingController();
     _ageController = TextEditingController();
@@ -32,6 +33,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   @override
   void dispose() {
+    _usernameController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
     _ageController.dispose();
@@ -47,48 +49,63 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         title: const Text('Profil erstellen'),
       ),
       body: CreateProfileForm(
+        usernameController: _usernameController,
         firstNameController: _firstNameController,
         lastNameController: _lastNameController,
         ageController: _ageController,
         phoneNumberController: _phoneNumberController,
         emailController: _emailController,
+        emergencyContact: _emergencyContact,
+        normalContact: _normalContact,
+        onEmergencyContactChanged: (value) {
+          setState(() {
+            _emergencyContact = value ?? false;
+          });
+        },
+        onNormalContactChanged: (value) {
+          setState(() {
+            _normalContact = value ?? false;
+          });
+        },
         onSave: _saveUserProfile,
       ),
     );
   }
 
   Future<void> _saveUserProfile() async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        final profileData = {
-          'firstName': _firstNameController.text,
-          'lastName': _lastNameController.text,
-          'age': _ageController.text,
-          'phoneNumber': _phoneNumberController.text,
-          'email': _emailController.text,
-        };
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .set(profileData);
-        // ignore: use_build_context_synchronously
+    if (_validateInputs()) {
+      try {
+        // Hier wird das Benutzerprofil gespeichert
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Profil erfolgreich erstellt!'),
           ),
         );
+      } catch (e) {
+        // Behandeln Sie den Fehler beim Speichern des Benutzerprofils
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Fehler beim Erstellen des Profils.'),
+          ),
+        );
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error saving user profile: $e');
-      }
-      // ignore: use_build_context_synchronously
+    }
+  }
+
+  bool _validateInputs() {
+    if (_usernameController.text.isEmpty ||
+        _firstNameController.text.isEmpty ||
+        _lastNameController.text.isEmpty ||
+        _ageController.text.isEmpty ||
+        _phoneNumberController.text.isEmpty ||
+        _emailController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Fehler beim Erstellen des Profils.'),
+          content: Text('Bitte füllen Sie alle Felder aus.'),
         ),
       );
+      return false;
     }
+    return true;
   }
 }

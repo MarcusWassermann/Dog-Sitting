@@ -1,17 +1,28 @@
+import 'package:dogs_sitting/models/user_text.dart';
 import 'package:flutter/material.dart';
 
 class FavoriteProvider extends ChangeNotifier {
-  final List<String> _favorites = [];
+  final List<UserText> _favorites = [];
 
-  List<String> get favorites => _favorites;
+  List<UserText> get favorites => _favorites;
 
-  void addToFavorites(String item) {
-    _favorites.add(item);
-    notifyListeners();
+  UserText? get container => _favorites.isNotEmpty ? _favorites.first : null;
+
+  bool isFavorite(UserText userText) {
+    return _favorites.contains(userText);
   }
 
-  void removeFromFavorites(String item) {
-    _favorites.remove(item);
-    notifyListeners();
+  void addToFavorites(UserText userText) {
+    if (!_favorites.contains(userText)) {
+      _favorites.add(userText);
+      notifyListeners();
+    }
+  }
+
+  void removeFromFavorites(UserText userText) {
+    if (_favorites.contains(userText)) {
+      _favorites.remove(userText);
+      notifyListeners();
+    }
   }
 }

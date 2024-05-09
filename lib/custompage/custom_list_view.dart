@@ -1,10 +1,8 @@
-// ignore_for_file: collection_methods_unrelated_type
-
 import 'package:dogs_sitting/models/user_text.dart';
-import 'package:dogs_sitting/provider/favoriten_provider.dart';
 import 'package:dogs_sitting/provider/user_text_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:dogs_sitting/provider/favoriten_provider.dart';
 
 class CustomListViewScreen extends StatelessWidget {
   const CustomListViewScreen({super.key});
@@ -27,7 +25,7 @@ class CustomListViewScreen extends StatelessWidget {
           if (userText.text.isNotEmpty) {
             return CustomListItem(userText: userText);
           } else {
-            return const SizedBox.shrink(); //  leere Anzeigen nicht anzeigen
+            return const SizedBox.shrink(); // Leere Anzeigen nicht anzeigen
           }
         },
       ),
@@ -38,12 +36,12 @@ class CustomListViewScreen extends StatelessWidget {
 class CustomListItem extends StatelessWidget {
   final UserText userText;
 
-  const CustomListItem({super.key, required this.userText});
+  const CustomListItem({super.key,required this.userText});
 
   @override
   Widget build(BuildContext context) {
     final bool isFavorite =
-        Provider.of<FavoriteProvider>(context).favorites.contains(userText);
+        Provider.of<FavoriteProvider>(context).isFavorite(userText);
 
     return Container(
       height: 100,
@@ -59,9 +57,15 @@ class CustomListItem extends StatelessWidget {
                 ? Image.asset(userText.imagePath!, fit: BoxFit.cover)
                 : null,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(userText.text),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                userText.text,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3, // Zeige maximal 3 Zeilen Text an
+              ),
+            ),
           ),
           IconButton(
             icon: Icon(
@@ -72,9 +76,9 @@ class CustomListItem extends StatelessWidget {
               final FavoriteProvider favoriteProvider =
                   Provider.of<FavoriteProvider>(context, listen: false);
               if (isFavorite) {
-                favoriteProvider.removeFromFavorites(userText as String);
+                favoriteProvider.removeFromFavorites(userText);
               } else {
-                favoriteProvider.addToFavorites(userText as String);
+                favoriteProvider.addToFavorites(userText);
               }
             },
           ),

@@ -1,17 +1,17 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class MyDatabase {
-  static final MyDatabase instance = MyDatabase._init();
+class AbstractDatabase {
+  static final AbstractDatabase instance = AbstractDatabase._init();
 
   static Database? _database;
 
-  MyDatabase._init();
+  AbstractDatabase._init();
 
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('my_database.db');
+    _database = await _initDB('abstract_database.db');
     return _database!;
   }
 

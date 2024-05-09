@@ -1,15 +1,15 @@
-
+// registration_button.dart
 
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  final VoidCallback? onPressed; // onPressed kann null sein
-  final String text; // Definieren Sie den Parameter text
+  final VoidCallback? onPressed;
+  final String text;
 
   const CustomButton({
     super.key,
     required this.onPressed,
-    required this.text, // Fügen Sie den Parameter text hinzu
+    required this.text,
   });
 
   @override
@@ -23,9 +23,9 @@ class CustomButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
-        onPressed: onPressed, // onPressed kann null sein
+        onPressed: onPressed,
         child: Text(
-          text, // Verwenden Sie den Parameter text
+          text,
           style: const TextStyle(color: Colors.white),
         ),
       ),

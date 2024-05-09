@@ -1,11 +1,13 @@
-// user_text.dart
-
 class UserText {
-  String text;
+  final String _text; // Umbenannter Parameter
   String? imagePath; // Pfad zum Bild
   bool isApproved;
+  String id; // ID des Benutzertextes
 
-  UserText(this.text, {this.imagePath, this.isApproved = false});
+  UserText(this._text,
+      {this.imagePath, this.isApproved = false, required this.id});
 
-  String? get id => null;
+  String get text => _text;
+
+  get container => null; // Getter für den Container
 }

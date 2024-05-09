@@ -1,43 +1,54 @@
-// registration_textfield.dart
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
+  final TextEditingController controller;
   final String labelText;
   final TextInputType? keyboardType;
   final bool obscureText;
-  final TextEditingController? controller;
+  final ValueChanged<String>? onChanged;
+  final String? errorText;
 
-  const CustomTextField({
-    super.key,
+  const CustomTextField({super.key, 
+    required this.controller,
     required this.labelText,
     this.keyboardType,
     this.obscureText = false,
-    this.controller, required void Function(dynamic _) onChanged,
+    this.onChanged,
+    this.errorText,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      height: 50,
       width: double.infinity,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10.0),
-          border: Border.all(color: Colors.grey),
-        ),
-        child: TextField(
-          controller: controller,
-          style: const TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            labelText: labelText,
-            labelStyle: const TextStyle(color: Colors.black),
-            border: InputBorder.none,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: labelText,
+          errorText: errorText,
+          errorStyle: const TextStyle(
+            color: Colors.red, // Fehlermeldung in Rot einfärben
           ),
-          keyboardType: keyboardType,
-          obscureText: obscureText,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Colors.black, // Fokussierter Rahmen in Schwarz
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: errorText != null
+                  ? Colors.red
+                  : Colors
+                      .black, // Rahmen in Rot einfärben, wenn Fehlermeldung vorhanden ist
+            ),
+          ),
         ),
+        keyboardType: keyboardType,
+        obscureText: obscureText,
+        onChanged: onChanged,
       ),
     );
   }

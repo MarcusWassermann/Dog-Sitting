@@ -30,14 +30,21 @@ class _ChatScreenState extends State<ChatScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 final messages = snapshot.data!.docs;
-                List<Widget> messageWidgets = [];
-                for (var message in messages) {
-                  final messageText = message['text'];
-                  final messageWidget = Text(messageText);
-                  messageWidgets.add(messageWidget);
-                }
-                return ListView(
-                  children: messageWidgets,
+                return ListView.builder(
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final messageText = messages[index]['text'];
+                    return ListTile(
+                      title: Text(messageText),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          _showDeleteConfirmationDialog(
+                              context, messages[index].id);
+                        },
+                      ),
+                    );
+                  },
                 );
               },
             ),
@@ -81,5 +88,37 @@ class _ChatScreenState extends State<ChatScreen> {
         .collection('messages')
         .add({'text': messageText});
     _messageController.clear();
+  }
+
+  Future<void> _showDeleteConfirmationDialog(
+      BuildContext context, String messageId) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Nachricht löschen?'),
+          content: const Text('Möchtest du diese Nachricht wirklich löschen?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Abbrechen'),
+            ),
+            TextButton(
+              onPressed: () {
+                _deleteMessage(messageId);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Löschen'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteMessage(String messageId) {
+    FirebaseFirestore.instance.collection('messages').doc(messageId).delete();
   }
 }

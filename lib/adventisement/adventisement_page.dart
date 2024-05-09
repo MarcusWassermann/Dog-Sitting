@@ -1,10 +1,13 @@
+
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
+import 'package:dogs_sitting/models/user_text.dart';
+import 'package:dogs_sitting/provider/user_text_provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'dart:io';
 
 class AdvertisementPage extends StatelessWidget {
@@ -30,7 +33,6 @@ class AdvertisementForm extends StatefulWidget {
 
 class _AdvertisementFormState extends State<AdvertisementForm> {
   late TextEditingController _textEditingController;
-  late FirebaseFirestore _firestore;
   late FirebaseStorage _storage;
   final ImagePicker _picker = ImagePicker();
   XFile? _image;
@@ -39,7 +41,6 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
   void initState() {
     super.initState();
     _textEditingController = TextEditingController();
-    _firestore = FirebaseFirestore.instance;
     _storage = FirebaseStorage.instance;
   }
 
@@ -52,8 +53,9 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
   void _saveData() async {
     String enteredText = _textEditingController.text;
     if (enteredText.isNotEmpty) {
-      // Daten in Firestore speichern
-      await _firestore.collection('advertisements').add({'text': enteredText});
+      UserText userText = UserText(enteredText, id: '');
+      Provider.of<UserTextProvider>(context, listen: false)
+          .addUserText(userText);
       _textEditingController.clear();
     }
   }
@@ -80,24 +82,68 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<UserTextProvider>(context);
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            height: 200,
-            child: TextField(
-              controller: _textEditingController,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+          Row(
+            children: [
+              if (_image != null)
+                SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: Image.file(File(_image!.path)),
                 ),
-                labelText: 'Text eingeben',
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(1.0),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 100,
+                          color: Colors.blue,
+                          child: const Center(
+                            child: Text(
+                              'Container',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                            height: 100,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SingleChildScrollView(
+                                child: TextField(
+                                  controller: _textEditingController,
+                                  keyboardType: TextInputType.multiline,
+                                  maxLines: null,
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'Text eingeben',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
           const SizedBox(height: 20.0),
           ElevatedButton(
@@ -109,9 +155,9 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
             onPressed: _uploadImage,
             child: const Text('Bild hochladen'),
           ),
-          if (_image != null) Image.file(File(_image!.path)),
         ],
       ),
     );
   }
 }
+

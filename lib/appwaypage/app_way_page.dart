@@ -1,3 +1,7 @@
+// app_way_page.dart
+
+import 'package:flutter/material.dart';
+import 'package:dogs_sitting/custompage/custom_list_view.dart';
 import 'package:dogs_sitting/adventisement/adventisement_page.dart';
 import 'package:dogs_sitting/chatpage/chat_screen.dart';
 import 'package:dogs_sitting/emergencypage/emergency_contact_screen.dart';
@@ -5,7 +9,6 @@ import 'package:dogs_sitting/favoritenpage/favoriten_screen.dart';
 import 'package:dogs_sitting/gallerypage/gallery_page.dart';
 import 'package:dogs_sitting/profilepage/createprofile_screen.dart';
 import 'package:dogs_sitting/settingpage/settings_page.dart';
-import 'package:flutter/material.dart';
 
 class AppWayScreen extends StatelessWidget {
   const AppWayScreen({super.key});
@@ -63,6 +66,13 @@ class AppWayScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const ChatScreen()),
+            );
+          }),
+          _buildCategoryButton(context, 'Benutzerdefinierte Liste', () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const CustomListViewScreen()),
             );
           }),
           // Weitere Kategorien können hier hinzugefügt werden
