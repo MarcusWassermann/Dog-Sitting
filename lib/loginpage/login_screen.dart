@@ -1,8 +1,9 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:dogs_sitting/data/abstract_database_sevice.dart';
 import 'package:dogs_sitting/appwaypage/app_way_page.dart';
-import 'package:dogs_sitting/loginpage/login_form.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,12 +15,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _usernameController;
   late final TextEditingController _passwordController;
+  late final AbstractDatabaseService _databaseService;
 
   @override
   void initState() {
     super.initState();
     _usernameController = TextEditingController();
     _passwordController = TextEditingController();
+    _databaseService =
+        FirestoreDatabaseService(); // Hier wähle deine spezifische Datenbankimplementierung
   }
 
   @override
@@ -29,31 +33,36 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _login() {
+  void _login() async {
     final String username = _usernameController.text;
     final String password = _passwordController.text;
 
     if (username.isNotEmpty && password.isNotEmpty) {
-      // Hier können Sie Ihre eigene Anmeldeüberprüfung implementieren
-      // Zum Beispiel: Überprüfen Sie die Anmeldeinformationen in einer Datenbank oder einem Authentifizierungsdienst
-      // In diesem Beispiel wird eine einfache Überprüfung mit festen Benutzerdaten durchgeführt
-      if (username == 'example' && password == 'password') {
-        // Wenn die Anmeldeinformationen korrekt sind, navigieren Sie zum Hauptbildschirm
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const AppWayScreen()),
-        );
-      } else {
-        // Wenn die Anmeldeinformationen falsch sind, zeigen Sie eine Fehlermeldung an
+      try {
+        final bool isUserValid =
+            await _databaseService.isUserValid(username, password);
+        if (isUserValid) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const AppWayScreen()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Anmeldung fehlgeschlagen! Benutzername oder Passwort ist falsch.'),
+            ),
+          );
+        }
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-                'Einloggen fehlgeschlagen! Benutzername oder Passwort ist falsch.'),
+                'Anmeldung fehlgeschlagen! Es ist ein Fehler aufgetreten.'),
           ),
         );
       }
     } else {
-      // Wenn Benutzername oder Passwort leer sind, zeigen Sie eine Fehlermeldung an
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Benutzername und Passwort dürfen nicht leer sein.'),
@@ -63,10 +72,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _forgotPassword() {
-    // Hier können Sie die Logik für das Zurücksetzen des Passworts implementieren
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Passwort vergessen?'),
+        content: Text('Password vergessen?'),
       ),
     );
   }
@@ -74,43 +82,99 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text(''),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text(
+          'Login',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context); // Zurück zur vorherigen Seite
+            Navigator.pop(context);
           },
         ),
       ),
-      body: LoginForm(
-        usernameController: _usernameController,
-        passwordController: _passwordController,
-        onLogin: _login,
-        onForgotPassword: _forgotPassword,
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.home,
-                color: Colors.black,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            'assets/3397939.jpg', // Anpassen des Pfads zum Hintergrundbild
+            fit: BoxFit.cover,
+          ),
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 500), // Erhöhung des vertical Padding-Wertes
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextFormField(
+                    controller: _usernameController,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: const InputDecoration(
+                      labelText: 'Benutzername',
+                      labelStyle: TextStyle(color: Colors.black),
+                      fillColor: Colors.white,
+                      filled: true,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _passwordController,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: const InputDecoration(
+                      labelText: 'Passwort',
+                      labelStyle: TextStyle(color: Colors.black),
+                      fillColor: Colors.white,
+                      filled: true,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                    ),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _login,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      elevation: 2,
+                      side: const BorderSide(color: Colors.black),
+                    ),
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextButton(
+                    onPressed: _forgotPassword,
+                    child: const Text(
+                      'Password vergessen?',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
             ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -56,18 +56,24 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   Future<void> _registerUser() async {
+    final String username = _usernameController.text.trim();
+    final String firstName = _firstNameController.text.trim();
+    final String lastName = _lastNameController.text.trim();
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text.trim();
+
     try {
       final UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+        email: email,
+        password: password,
       );
 
       await _firestore.collection('users').doc(userCredential.user!.uid).set({
-        'username': _usernameController.text.trim(),
-        'firstName': _firstNameController.text.trim(),
-        'lastName': _lastNameController.text.trim(),
-        'email': _emailController.text.trim(),
+        'username': username,
+        'firstName': firstName,
+        'lastName': lastName,
+        'email': email,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -80,9 +86,17 @@ class _RegistrationFormState extends State<RegistrationForm> {
       widget.onRegistrationSuccess();
     } catch (e) {
       if (kDebugMode) {
-        print(
-          'Fehler bei der Registrierung: $e');
-      } // Hier wird die Fehlermeldung gedruckt
+        print('Fehler bei der Registrierung: $e');
+      }
+      if (e is FirebaseAuthException) {
+        if (kDebugMode) {
+          print('Firebase Auth Fehlercode: ${e.code}');
+        }
+        if (kDebugMode) {
+          print('Firebase Auth Fehlermeldung: ${e.message}');
+        }
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Fehler bei der Registrierung: $e'),
@@ -95,13 +109,17 @@ class _RegistrationFormState extends State<RegistrationForm> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
+        const SizedBox(
+            height: 32.0), // Zusätzlicher Platz über dem ersten Textfeld
         TextField(
           controller: _usernameController,
           decoration: const InputDecoration(
             labelText: 'Benutzername',
-            border: OutlineInputBorder(), 
+            border: OutlineInputBorder(),
+            fillColor: Colors.white,
+            filled: true,
           ),
         ),
         const SizedBox(height: 16.0),
@@ -110,6 +128,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
           decoration: const InputDecoration(
             labelText: 'Vorname',
             border: OutlineInputBorder(),
+            fillColor: Colors.white,
+            filled: true,
           ),
         ),
         const SizedBox(height: 16.0),
@@ -118,6 +138,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
           decoration: const InputDecoration(
             labelText: 'Nachname',
             border: OutlineInputBorder(),
+            fillColor: Colors.white,
+            filled: true,
           ),
         ),
         const SizedBox(height: 16.0),
@@ -126,6 +148,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
           decoration: const InputDecoration(
             labelText: 'E-Mail',
             border: OutlineInputBorder(),
+            fillColor: Colors.white,
+            filled: true,
           ),
         ),
         const SizedBox(height: 16.0),
@@ -135,11 +159,20 @@ class _RegistrationFormState extends State<RegistrationForm> {
           decoration: const InputDecoration(
             labelText: 'Passwort',
             border: OutlineInputBorder(),
+            fillColor: Colors.white,
+            filled: true,
           ),
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(
+            height: 220.0), // Zusätzlicher Platz unter dem letzten Textfeld
         ElevatedButton(
           onPressed: _isInputValid ? _registerUser : null,
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white, backgroundColor: _isInputValid
+                ? Colors.blue
+                : Colors
+                    .grey, // Textfarbe
+          ),
           child: const Text('Registrieren'),
         ),
       ],

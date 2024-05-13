@@ -1,3 +1,4 @@
+import 'package:dogs_sitting/data/abstract_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:dogs_sitting/home/home_screen.dart';
@@ -9,6 +10,10 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  // Initialisierung der SQLite-Datenbank
+  await AbstractDatabase.instance.database;
+
   runApp(
     MultiProvider(
       providers: [

@@ -1,7 +1,7 @@
 import 'package:dogs_sitting/provider/auth_ptovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dogs_sitting/provider/user_text_provider.dart';
+import 'package:dogs_sitting/settingpage/widgets/delete_dialog.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -9,51 +9,103 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Provider.of<UserTextProvider>(context, listen: false)
-                    .deleteAllUserTexts();
-              },
-              child: const Text('Delete All User Texts'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                
-              },
-              child: const Text('Delete Profile'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Hier können Sie die Funktion zum Löschen der Anzeige einfügen
-                // Zum Beispiel:
-                // Provider.of<AdProvider>(context, listen: false).deleteAd();
-              },
-              child: const Text('Delete Ad'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Hier können Sie die Funktion zum Entfernen als Notfallkontakt einfügen
-                // Zum Beispiel:
-                // Provider.of<ContactProvider>(context, listen: false).removeAsEmergencyContact();
-              },
-              child: const Text('Remove as Emergency Contact'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Provider.of<AuthProvider>(context, listen: false).signOut();
-              },
-              child: const Text('Sign Out'),
-            ),
-          ],
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text(
+          'Einstellungen',
+          style: TextStyle(
+            color: Color.fromARGB(255, 232, 224, 224),
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/1147812.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.white,
+                  padding: const EdgeInsets.all(20),
+                  side: const BorderSide(width: 2, color: Colors.black),
+                ),
+                onPressed: () {
+                  _showDeleteConfirmation(context, "Profil löschen");
+                },
+                child: const Text('Profil löschen'),
+              ),
+              const SizedBox(height: 60),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.white,
+                  padding: const EdgeInsets.all(20),
+                  side: const BorderSide(width: 2, color: Colors.black),
+                ),
+                onPressed: () {
+                  _showDeleteConfirmation(context, "Anzeige löschen");
+                  Provider.of<AuthProvider>(context, listen: false).deleteAd();
+                },
+                child: const Text('Anzeige löschen'),
+              ),
+              const SizedBox(height: 250),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.white,
+                  padding: const EdgeInsets.all(20),
+                  side: const BorderSide(width: 2, color: Colors.black),
+                ),
+                onPressed: () {
+                  _showDeleteConfirmation(
+                      context, "Als Notfallkontakt entfernen");
+                  Provider.of<AuthProvider>(context, listen: false)
+                      .removeAsEmergencyContact();
+                },
+                child: const Text('Als Notfallkontakt entfernen'),
+              ),
+              const SizedBox(height: 60),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.white,
+                  padding: const EdgeInsets.all(20),
+                  side: const BorderSide(width: 2, color: Colors.black),
+                ),
+                onPressed: () {
+                  _showDeleteConfirmation(context, "Abmelden");
+                  Provider.of<AuthProvider>(context, listen: false).signOut();
+                },
+                child: const Text('Abmelden'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, String action) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DeleteDialog(action: action);
+      },
     );
   }
 }

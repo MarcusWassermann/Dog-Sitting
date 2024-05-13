@@ -34,13 +34,13 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              height: 100, 
+              height: 80, 
             ),
             Center(
               child: Text(
                 'Dog Sitting',
                 style: TextStyle(
-                  fontSize: 34.0, // Adjust the font size as needed
+                  fontSize: 40.0, // Adjust the font size as needed
                   color: Color.fromARGB(255, 27, 24, 24),
                   fontFamily: 'YourOtherFont', // Anderes Schriftart
                   fontWeight: FontWeight.bold, // Fettschrift
