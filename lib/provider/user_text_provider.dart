@@ -4,10 +4,18 @@ import 'package:flutter/material.dart';
 class UserTextProvider extends ChangeNotifier {
   final List<UserText> _userTexts = [];
   String _enteredPostcode = '';
+  late TextEditingController _postcodeEditingController;
+
+  UserTextProvider() {
+    _postcodeEditingController = TextEditingController();
+  }
 
   List<UserText> get userTexts => _userTexts;
 
   String get enteredPostcode => _enteredPostcode;
+
+  TextEditingController get postcodeEditingController =>
+      _postcodeEditingController;
 
   void addUserText(UserText userText) {
     _userTexts.add(userText);

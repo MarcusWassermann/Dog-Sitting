@@ -1,13 +1,22 @@
+
+
+import 'package:flutter/material.dart';
+
 class UserText {
-  final String _text; // Umbenannter Parameter
-  String? imagePath; // Pfad zum Bild
-  bool isApproved;
-  String id; // ID des Benutzertextes
+  final String text;
+  final String id;
+  final String postcode; // Hinzugefügt
+  final String? imagePath; // Hinzugefügt
+  bool isApproved; // Hinzugefügt
 
-  UserText(this._text,
-      {this.imagePath, this.isApproved = false, required this.id});
+  UserText(this.text,
+      {required this.id,
+      required this.postcode,
+      this.imagePath,
+      this.isApproved = false, required Widget widget});
 
-  String get text => _text;
-
-  get container => null; // Getter für den Container
+  @override
+  String toString() {
+    return 'UserText{text: $text, id: $id, postcode: $postcode, imagePath: $imagePath, isApproved: $isApproved}';
+  }
 }

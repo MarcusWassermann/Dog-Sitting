@@ -1,7 +1,8 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:dogs_sitting/custompage/custom_list_view.dart';
 import 'package:dogs_sitting/adventisement/adventisement_page.dart';
-import 'package:dogs_sitting/chatpage/chat_screen.dart';
 import 'package:dogs_sitting/emergencypage/emergency_contact_screen.dart';
 import 'package:dogs_sitting/favoritenpage/favoriten_screen.dart';
 import 'package:dogs_sitting/gallerypage/gallery_page.dart';
@@ -9,7 +10,7 @@ import 'package:dogs_sitting/profilepage/createprofile_screen.dart';
 import 'package:dogs_sitting/settingpage/settings_page.dart';
 
 class AppWayScreen extends StatelessWidget {
-  const AppWayScreen({super.key});
+  const AppWayScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class AppWayScreen extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            'assets/358238.jpg', // Pfad zum Hintergrundbild anpassen
+            'assets/358238.jpg', 
             fit: BoxFit.cover,
           ),
           Padding(
@@ -34,7 +35,7 @@ class AppWayScreen extends StatelessWidget {
                     Navigator.of(context).pop();
                   },
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
                 _buildButton(
                   context,
                   'Favoriten',
@@ -49,7 +50,7 @@ class AppWayScreen extends StatelessWidget {
                   },
                   Alignment.centerLeft,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
                 _buildButton(
                   context,
                   'Einstellungen',
@@ -64,7 +65,7 @@ class AppWayScreen extends StatelessWidget {
                   },
                   Alignment.centerRight,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
                 _buildButton(
                   context,
                   'Profil erstellen',
@@ -79,22 +80,7 @@ class AppWayScreen extends StatelessWidget {
                   },
                   Alignment.centerLeft,
                 ),
-                const SizedBox(height: 20),
-                _buildButton(
-                  context,
-                  'Anzeigen aufgeben',
-                  Icons.add_box,
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AdvertisementPage(),
-                      ),
-                    );
-                  },
-                  Alignment.centerRight,
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
                 _buildButton(
                   context,
                   'Notfallkontakt',
@@ -108,9 +94,9 @@ class AppWayScreen extends StatelessWidget {
                       ),
                     );
                   },
-                  Alignment.centerLeft,
+                  Alignment.centerRight,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
                 _buildButton(
                   context,
                   'Galerie',
@@ -123,24 +109,9 @@ class AppWayScreen extends StatelessWidget {
                       ),
                     );
                   },
-                  Alignment.centerRight,
-                ),
-                const SizedBox(height: 20),
-                _buildButton(
-                  context,
-                  'Chat',
-                  Icons.chat,
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ChatScreen(),
-                      ),
-                    );
-                  },
                   Alignment.centerLeft,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
                 _buildButton(
                   context,
                   'Anzeigen',
@@ -154,6 +125,21 @@ class AppWayScreen extends StatelessWidget {
                     );
                   },
                   Alignment.centerRight,
+                ),
+                const SizedBox(height: 5),
+                _buildButton(
+                  context,
+                  'Anzeigen aufgeben',
+                  Icons.add_box,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AdvertisementPage(),
+                      ),
+                    );
+                  },
+                  Alignment.centerLeft,
                 ),
               ],
             ),

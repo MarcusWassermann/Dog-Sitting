@@ -8,10 +8,8 @@ class CreateProfileForm extends StatelessWidget {
   final TextEditingController phoneNumberController;
   final TextEditingController emailController;
   final bool emergencyContact;
-  final bool normalContact;
   final VoidCallback onSave;
   final void Function(bool?)? onEmergencyContactChanged;
-  final void Function(bool?)? onNormalContactChanged;
 
   const CreateProfileForm({
     super.key,
@@ -22,17 +20,15 @@ class CreateProfileForm extends StatelessWidget {
     required this.phoneNumberController,
     required this.emailController,
     required this.emergencyContact,
-    required this.normalContact,
     required this.onSave,
     this.onEmergencyContactChanged,
-    this.onNormalContactChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Zusätzliche Aktionen bei Berührung des Bildschirms
+        FocusScope.of(context).unfocus();
       },
       child: Center(
         child: Padding(
@@ -100,29 +96,58 @@ class CreateProfileForm extends StatelessWidget {
                     enabled: true,
                   ),
                   const SizedBox(height: 16.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Notfall Kontakt'),
-                      Checkbox(
-                        value: emergencyContact,
-                        onChanged: onEmergencyContactChanged,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Normal Kontakt'),
-                      Checkbox(
-                        value: normalContact,
-                        onChanged: onNormalContactChanged,
-                      ),
-                    ],
-                  ),
                   ElevatedButton(
-                    onPressed: onSave,
-                    child: const Text('Profil erstellen'),
+                    onPressed: () async {
+                      onEmergencyContactChanged?.call(!emergencyContact);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: emergencyContact
+                          ? Colors.green
+                          : Colors
+                              .red, // Grüne oder rote Hintergrundfarbe je nach Zustand
+                      minimumSize: const Size(
+                          30, 30), // Mindestgröße für den Button festlegen
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        side: const BorderSide(
+                            color: Colors.white,
+                            width: 2), // Stärkerer weißer Rand
+                      ),
+                    ),
+                    child: Text(
+                      'Notfall Kontakt',
+                      style: TextStyle(
+                        color: emergencyContact
+                            ? Colors.white
+                            : Colors
+                                .black, // Weiße oder schwarze Schriftfarbe je nach Zustand
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_areFieldsFilled()) {
+                        await _saveProfileToFirestore();
+                        _resetFields();
+                        onSave();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Bitte füllen Sie alle Felder aus.'),
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.lightGreen,
+                    ),
+                    child: const Text(
+                      'Profil erstellen',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -131,6 +156,19 @@ class CreateProfileForm extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _saveProfileToFirestore() async {
+    // Hier wird das Benutzerprofil in Firestore gespeichert
+  }
+
+  void _resetFields() {
+    usernameController.clear();
+    firstNameController.clear();
+    lastNameController.clear();
+    ageController.clear();
+    phoneNumberController.clear();
+    emailController.clear();
   }
 
   Widget _buildProfileTextField(
@@ -149,10 +187,15 @@ class CreateProfileForm extends StatelessWidget {
         controller: controller,
         keyboardType: keyboardType,
         enabled: enabled,
+        style: const TextStyle(color: Colors.white), // Weiße Füllschriftfarbe
         decoration: InputDecoration(
           labelText: labelText,
+          labelStyle:
+              const TextStyle(color: Colors.white), // Weiße Schriftfarbe
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+                color: Colors.white, width: 2), // Stärkerer weißer Rand
           ),
         ),
         validator: optional
@@ -165,5 +208,14 @@ class CreateProfileForm extends StatelessWidget {
               },
       ),
     );
+  }
+
+  bool _areFieldsFilled() {
+    return usernameController.text.isNotEmpty &&
+        firstNameController.text.isNotEmpty &&
+        lastNameController.text.isNotEmpty &&
+        ageController.text.isNotEmpty &&
+        phoneNumberController.text.isNotEmpty &&
+        emailController.text.isNotEmpty;
   }
 }

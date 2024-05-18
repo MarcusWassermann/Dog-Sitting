@@ -1,7 +1,7 @@
-import 'package:dogs_sitting/models/user_text.dart';
-import 'package:dogs_sitting/provider/user_text_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:dogs_sitting/models/user_text.dart';
+import 'package:dogs_sitting/provider/user_text_provider.dart';
 import 'package:dogs_sitting/provider/favoriten_provider.dart';
 
 class CustomListViewScreen extends StatelessWidget {
@@ -13,21 +13,36 @@ class CustomListViewScreen extends StatelessWidget {
         Provider.of<UserTextProvider>(context).userTexts;
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         title: const Text('Custom ListView'),
       ),
-      body: ListView.separated(
-        itemCount: userTexts.length,
-        separatorBuilder: (BuildContext context, int index) =>
-            const SizedBox(height: 16),
-        itemBuilder: (BuildContext context, int index) {
-          final UserText userText = userTexts[index];
-          if (userText.text.isNotEmpty) {
-            return CustomListItem(userText: userText);
-          } else {
-            return const SizedBox.shrink(); // Leere Anzeigen nicht anzeigen
-          }
-        },
+      body: Stack(
+        children: [
+          // Hintergrundbild über die ganze Seite
+          Image.asset(
+            'assets/16868426.jpg',
+            fit: BoxFit.cover,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+          ),
+          // ListView mit benutzerdefinierten Listenelementen
+          ListView.separated(
+            itemCount: userTexts.length,
+            separatorBuilder: (BuildContext context, int index) =>
+                const SizedBox(height: 16),
+            itemBuilder: (BuildContext context, int index) {
+              final UserText userText = userTexts[index];
+              if (userText.text.isNotEmpty) {
+                return CustomListItem(userText: userText);
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
+          ),
+        ],
       ),
     );
   }
@@ -44,8 +59,12 @@ class CustomListItem extends StatelessWidget {
         Provider.of<FavoriteProvider>(context).isFavorite(userText);
 
     return Container(
+      margin: const EdgeInsets.all(8),
       height: 100,
-      color: Colors.grey[300],
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.black),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -63,7 +82,7 @@ class CustomListItem extends StatelessWidget {
               child: Text(
                 userText.text,
                 overflow: TextOverflow.ellipsis,
-                maxLines: 3, // Zeige maximal 3 Zeilen Text an
+                maxLines: 3,
               ),
             ),
           ),
@@ -87,3 +106,4 @@ class CustomListItem extends StatelessWidget {
     );
   }
 }
+

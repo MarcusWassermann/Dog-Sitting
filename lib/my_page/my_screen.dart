@@ -28,7 +28,7 @@ class MyScreen extends StatelessWidget {
                 child: const Text(
                   'Willkommen zur Dog-Sitting-App',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 22,
                     color: Colors.white, // Textfarbe auf Weiß geändert
                     fontWeight: FontWeight.bold,
                   ),

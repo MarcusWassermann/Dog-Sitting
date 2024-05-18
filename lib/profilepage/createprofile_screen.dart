@@ -18,7 +18,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   late final TextEditingController _phoneNumberController;
   late final TextEditingController _emailController;
   bool _emergencyContact = false;
-  bool _normalContact = true;
 
   @override
   void initState() {
@@ -46,66 +45,56 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profil erstellen'),
+        title: const Text(
+          'Profil erstellen',
+          style: TextStyle(color: Colors.white), // Weißer Text
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(
+          color: Colors.white, // Weißer Pfeil
+        ),
       ),
-      body: CreateProfileForm(
-        usernameController: _usernameController,
-        firstNameController: _firstNameController,
-        lastNameController: _lastNameController,
-        ageController: _ageController,
-        phoneNumberController: _phoneNumberController,
-        emailController: _emailController,
-        emergencyContact: _emergencyContact,
-        normalContact: _normalContact,
-        onEmergencyContactChanged: (value) {
-          setState(() {
-            _emergencyContact = value ?? false;
-          });
-        },
-        onNormalContactChanged: (value) {
-          setState(() {
-            _normalContact = value ?? false;
-          });
-        },
-        onSave: _saveUserProfile,
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Hintergrundbild über die gesamte Seite
+          Image.asset(
+            'assets/14475041.jpg',
+            fit: BoxFit.cover,
+          ),
+          // Inhalte über das Hintergrundbild
+          SingleChildScrollView(
+            padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top + kToolbarHeight),
+            child: CreateProfileForm(
+              usernameController: _usernameController,
+              firstNameController: _firstNameController,
+              lastNameController: _lastNameController,
+              ageController: _ageController,
+              phoneNumberController: _phoneNumberController,
+              emailController: _emailController,
+              emergencyContact: _emergencyContact,
+              onEmergencyContactChanged: (value) {
+                setState(() {
+                  _emergencyContact = value ?? false;
+                });
+              },
+              onSave: _saveUserProfile,
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Future<void> _saveUserProfile() async {
-    if (_validateInputs()) {
-      try {
-        // Hier wird das Benutzerprofil gespeichert
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profil erfolgreich erstellt!'),
-          ),
-        );
-      } catch (e) {
-        // Behandeln Sie den Fehler beim Speichern des Benutzerprofils
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Fehler beim Erstellen des Profils.'),
-          ),
-        );
-      }
-    }
-  }
-
-  bool _validateInputs() {
-    if (_usernameController.text.isEmpty ||
-        _firstNameController.text.isEmpty ||
-        _lastNameController.text.isEmpty ||
-        _ageController.text.isEmpty ||
-        _phoneNumberController.text.isEmpty ||
-        _emailController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Bitte füllen Sie alle Felder aus.'),
-        ),
-      );
-      return false;
-    }
-    return true;
+    // Hier wird das Benutzerprofil gespeichert
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Profil erfolgreich erstellt!'),
+      ),
+    );
   }
 }
