@@ -1,7 +1,11 @@
+// create_profile_screen.dart
+
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:flutter/material.dart';
 import 'package:dogs_sitting/profilepage/create_profile_form.dart';
+import 'package:dogs_sitting/profilepage/repository/create_profile_repository.dart';
+import 'package:flutter/material.dart';
+
 
 class CreateProfileScreen extends StatefulWidget {
   const CreateProfileScreen({super.key});
@@ -18,6 +22,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   late final TextEditingController _phoneNumberController;
   late final TextEditingController _emailController;
   bool _emergencyContact = false;
+  final CreateProfileRepository _profileRepository = CreateProfileRepository();
 
   @override
   void initState() {
@@ -82,6 +87,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                 });
               },
               onSave: _saveUserProfile,
+              profileRepository: _profileRepository,
             ),
           ),
         ],

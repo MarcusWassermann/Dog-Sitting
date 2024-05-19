@@ -8,10 +8,33 @@ class AdvertisementPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Advertisement Page'),
+        title: const Text(
+          'Anzeigenseite',
+          style: TextStyle(color: Colors.white),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: Colors.transparent,
+        elevation: 0, // Entfernt die Schattenlinie der AppBar
       ),
-      body: AdvertisementForm(
-        postcodeEditingController: TextEditingController(),
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        children: [
+          // Hintergrundbild
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/1906154.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          // Restlicher Inhalt
+          Positioned.fill(
+            child: AdvertisementForm(
+              postcodeEditingController: TextEditingController(),
+            ),
+          ),
+        ],
       ),
     );
   }

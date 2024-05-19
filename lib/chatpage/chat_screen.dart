@@ -1,10 +1,17 @@
+// chat_screen.dart
+
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:dogs_sitting/chatpage/repository/chat_repository.dart';
+import 'package:dogs_sitting/chatpage/widgets/message_input.dart';
+import 'package:dogs_sitting/chatpage/widgets/message_list.dart';
 import 'package:flutter/material.dart';
+
 
 class ChatScreen extends StatefulWidget {
   final String chatPartnerName;
-  const ChatScreen({super.key,required this.chatPartnerName});
+
+  const ChatScreen({super.key, required this.chatPartnerName});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -12,20 +19,41 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   late final TextEditingController _messageController;
-  final List<String> _messages = [];
-  final List<String> _deletedMessages = [];
+  late final ChatRepository _chatRepository;
   bool _isBlocked = false;
 
   @override
   void initState() {
     super.initState();
     _messageController = TextEditingController();
+    _chatRepository = ChatRepository();
   }
 
   @override
   void dispose() {
     _messageController.dispose();
     super.dispose();
+  }
+
+  void _sendMessage() {
+    if (_messageController.text.trim().isNotEmpty) {
+      setState(() {
+        _chatRepository.addMessage(_messageController.text.trim());
+        _messageController.clear();
+      });
+    }
+  }
+
+  void _toggleBlockUser() {
+    setState(() {
+      _isBlocked = !_isBlocked;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(_isBlocked ? 'Benutzer blockiert' : 'Benutzer entsperrt'),
+      ),
+    );
   }
 
   @override
@@ -52,52 +80,33 @@ class _ChatScreenState extends State<ChatScreen> {
           // Inhalte über das Hintergrundbild
           Column(
             children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _messages.length,
-                  itemBuilder: (context, index) {
-                    final message = _messages[index];
-                    return Dismissible(
-                      key: Key(message),
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (direction) {
-                        setState(() {
-                          _deletedMessages.add(message);
-                          _messages.removeAt(index);
-                        });
+              MessageList(
+                messages: _chatRepository.messages,
+                onDismissed: (index) {
+                  setState(() {
+                    _chatRepository.deleteMessage(index);
+                  });
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text('Nachricht gelöscht'),
-                            action: SnackBarAction(
-                              label: 'Rückgängig',
-                              onPressed: () {
-                                setState(() {
-                                  _messages.insert(index, message);
-                                  _deletedMessages.remove(message);
-                                });
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                      background: Container(color: Colors.red),
-                      child: Container(
-                        padding: const EdgeInsets.all(10.0),
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 5.0, horizontal: 10.0),
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Text(
-                          message,
-                          style: const TextStyle(color: Colors.white),
-                        ),
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('Nachricht gelöscht'),
+                      action: SnackBarAction(
+                        label: 'Rückgängig',
+                        onPressed: () {
+                          setState(() {
+                            _chatRepository.restoreMessage(
+                                index, _chatRepository.deletedMessages.last);
+                          });
+                        },
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
+                onRestore: (index, message) {
+                  setState(() {
+                    _chatRepository.restoreMessage(index, message);
+                  });
+                },
               ),
               _isBlocked
                   ? const Padding(
@@ -107,56 +116,13 @@ class _ChatScreenState extends State<ChatScreen> {
                         style: TextStyle(color: Colors.red),
                       ),
                     )
-                  : _buildMessageInput(),
+                  : MessageInput(
+                      messageController: _messageController,
+                      onSendMessage: _sendMessage,
+                    ),
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildMessageInput() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _messageController,
-              decoration: InputDecoration(
-                hintText: 'Nachricht schreiben...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: _sendMessage,
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _sendMessage() {
-    if (_messageController.text.trim().isNotEmpty) {
-      setState(() {
-        _messages.add(_messageController.text.trim());
-        _messageController.clear();
-      });
-    }
-  }
-
-  void _toggleBlockUser() {
-    setState(() {
-      _isBlocked = !_isBlocked;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(_isBlocked ? 'Benutzer blockiert' : 'Benutzer entsperrt'),
       ),
     );
   }
