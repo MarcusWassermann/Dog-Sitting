@@ -1,5 +1,3 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
 import 'package:dogs_sitting/custompage/custom_list_view.dart';
 import 'package:dogs_sitting/adventisement/adventisement_page.dart';
@@ -10,7 +8,7 @@ import 'package:dogs_sitting/profilepage/createprofile_screen.dart';
 import 'package:dogs_sitting/settingpage/settings_page.dart';
 
 class AppWayScreen extends StatelessWidget {
-  const AppWayScreen({Key? key});
+  const AppWayScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +17,7 @@ class AppWayScreen extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            'assets/358238.jpg', 
+            'assets/358238.jpg',
             fit: BoxFit.cover,
           ),
           Padding(
@@ -89,8 +87,9 @@ class AppWayScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            const EmergencyContactScreen(contactName: ''),
+                        builder: (context) => const EmergencyContactScreen(
+                            contactName: 'Notfallkontakt',
+                            documentId: 'DEINE_DOCUMENT_ID'),
                       ),
                     );
                   },

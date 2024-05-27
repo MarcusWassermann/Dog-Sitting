@@ -1,11 +1,9 @@
-// ignore_for_file: use_build_context_synchronously, deprecated_member_use, library_private_types_in_public_api, unused_element
-
 import 'dart:io';
-import 'package:dogs_sitting/gallerypage/upload_page.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart'
-    as firebase_storage; // Import für firebase_storage hinzugefügt
-import 'package:logger/logger.dart'; // Logger-Bibliothek importiert
+import 'package:dogs_sitting/gallerypage/upload_page.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:logger/logger.dart';
 
 class GalleryPage extends StatefulWidget {
   const GalleryPage({super.key});
@@ -15,10 +13,14 @@ class GalleryPage extends StatefulWidget {
 }
 
 class _GalleryPageState extends State<GalleryPage> {
-  final List<File> _images = [];
-  final logger = Logger(); // Logger-Instanz erstellt
+  final List<File> _images = [
+    File('path/to/your/image1.jpg'),
+    File('path/to/your/image2.jpg'),
+  ]; // Beispielbilder hinzugefügt
+  final logger = Logger();
+  final Random _random = Random();
 
-  // Methode zum Hochladen eines Bildes
+  // Methode zum Hochladen eines Bildes in Firebase Storage
   Future<void> _uploadImage(File image) async {
     try {
       firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
@@ -33,25 +35,24 @@ class _GalleryPageState extends State<GalleryPage> {
 
   // Widget zum Aufbau einer Bildkarte
   Widget _buildImageCard(File image) {
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: Colors.black, width: 2.0),
+      ),
       margin: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Image.file(
-            image,
-            fit: BoxFit.cover,
-            height: 150.0,
+      height: 150,
+      width: 150,
+      child: Center(
+        child: Text(
+          'Bild ${_images.indexOf(image) + 1}',
+          style: const TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Bild ${_images.indexOf(image) + 1}',
-              style:
-                  const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -59,8 +60,11 @@ class _GalleryPageState extends State<GalleryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Galerie'),
+        backgroundColor: Colors.transparent, // Transparente AppBar
+        elevation: 0, // Keine Schatten unter der AppBar
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -90,17 +94,42 @@ class _GalleryPageState extends State<GalleryPage> {
               onTap: () {
                 Navigator.pop(context); // Schließt den Drawer
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const UploadPage()));
+                  context,
+                  MaterialPageRoute(builder: (context) => const UploadPage()),
+                );
               },
             ),
           ],
         ),
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        children: _images.map((image) => _buildImageCard(image)).toList(),
+      body: Stack(
+        children: [
+          // Hintergrundbild
+          Positioned.fill(
+            child: Image.asset(
+              'assets/3080322.jpg',
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Transparenter Scaffold, damit der Hintergrund über die AppBar hinaus sichtbar ist
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            body: SingleChildScrollView(
+              child: Stack(
+                children: [
+                  for (int i = 0; i < _images.length; i++)
+                    Positioned(
+                      left: _random.nextDouble() *
+                          (MediaQuery.of(context).size.width - 150),
+                      top: _random.nextDouble() *
+                          (MediaQuery.of(context).size.height * 2 - 150),
+                      child: _buildImageCard(_images[i]),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

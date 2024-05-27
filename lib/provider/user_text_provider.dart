@@ -1,29 +1,13 @@
-import 'package:dogs_sitting/models/user_text.dart';
 import 'package:flutter/material.dart';
+import 'package:dogs_sitting/models/user_text.dart';
 
 class UserTextProvider extends ChangeNotifier {
   final List<UserText> _userTexts = [];
-  String _enteredPostcode = '';
-  late TextEditingController _postcodeEditingController;
-
-  UserTextProvider() {
-    _postcodeEditingController = TextEditingController();
-  }
 
   List<UserText> get userTexts => _userTexts;
 
-  String get enteredPostcode => _enteredPostcode;
-
-  TextEditingController get postcodeEditingController =>
-      _postcodeEditingController;
-
   void addUserText(UserText userText) {
     _userTexts.add(userText);
-    notifyListeners();
-  }
-
-  void approveUserText(int index) {
-    _userTexts[index].isApproved = true;
     notifyListeners();
   }
 
@@ -32,16 +16,13 @@ class UserTextProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setEnteredPostcode(String postcode) {
-    _enteredPostcode = postcode;
+  UserText getUserText(String id) {
+    return _userTexts.firstWhere((userText) => userText.id == id);
+  }
+
+  void saveUserTextsLocally(List<UserText> userTexts) {
+    _userTexts.clear();
+    _userTexts.addAll(userTexts);
     notifyListeners();
   }
-
-  bool checkPostcode() {
-    // Implementiere deine Logik zur Überprüfung der Postleitzahl hier
-    // Rückgabe true, wenn die Postleitzahl gültig ist, sonst false
-    return true; // Hier musst du die tatsächliche Überprüfung implementieren
-  }
-
-  getUserText(String id) {}
 }

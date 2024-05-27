@@ -25,7 +25,7 @@ class RegistrationScreen extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            'assets/19296629.jpg', // Pfad zum Hintergrundbild anpassen
+            'assets/3752118.jpg', // Pfad zum Hintergrundbild anpassen
             fit: BoxFit.cover,
           ),
           Padding(

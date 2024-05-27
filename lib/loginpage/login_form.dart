@@ -72,3 +72,31 @@ class LoginForm extends StatelessWidget {
     );
   }
 }
+
+// ignore: unused_element
+void _onForgotPassword(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Passwort zurücksetzen'),
+        content: TextField(
+          decoration: const InputDecoration(labelText: 'E-Mail-Adresse'),
+          onChanged: (value) {
+            // Hier kannst du die Eingabe der E-Mail-Adresse verarbeiten
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Hier kannst du die E-Mail senden oder den Benutzer zur
+              // Seite zum Zurücksetzen des Passworts weiterleiten.
+              Navigator.pop(context); // Dialog schließen
+            },
+            child: const Text('Absenden'),
+          ),
+        ],
+      );
+    },
+  );
+}

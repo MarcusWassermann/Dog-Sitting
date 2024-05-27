@@ -5,13 +5,14 @@
 import 'package:dogs_sitting/chatpage/repository/chat_repository.dart';
 import 'package:dogs_sitting/chatpage/widgets/message_input.dart';
 import 'package:dogs_sitting/chatpage/widgets/message_list.dart';
+import 'package:dogs_sitting/models/user_text.dart';
 import 'package:flutter/material.dart';
-
 
 class ChatScreen extends StatefulWidget {
   final String chatPartnerName;
 
-  const ChatScreen({super.key, required this.chatPartnerName});
+  const ChatScreen(
+      {super.key, required this.chatPartnerName, required UserText userText});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -59,6 +60,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(widget.chatPartnerName),
         actions: [
@@ -67,6 +69,8 @@ class _ChatScreenState extends State<ChatScreen> {
             onPressed: _toggleBlockUser,
           ),
         ],
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Stack(
         children: [
@@ -80,33 +84,39 @@ class _ChatScreenState extends State<ChatScreen> {
           // Inhalte über das Hintergrundbild
           Column(
             children: [
-              MessageList(
-                messages: _chatRepository.messages,
-                onDismissed: (index) {
-                  setState(() {
-                    _chatRepository.deleteMessage(index);
-                  });
+              SizedBox(
+                  height: AppBar()
+                      .preferredSize
+                      .height), // Platzhalter für die Höhe der AppBar
+              Expanded(
+                child: MessageList(
+                  messages: _chatRepository.messages,
+                  onDismissed: (index) {
+                    setState(() {
+                      _chatRepository.deleteMessage(index);
+                    });
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Nachricht gelöscht'),
-                      action: SnackBarAction(
-                        label: 'Rückgängig',
-                        onPressed: () {
-                          setState(() {
-                            _chatRepository.restoreMessage(
-                                index, _chatRepository.deletedMessages.last);
-                          });
-                        },
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('Nachricht gelöscht'),
+                        action: SnackBarAction(
+                          label: 'Rückgängig',
+                          onPressed: () {
+                            setState(() {
+                              _chatRepository.restoreMessage(
+                                  index, _chatRepository.deletedMessages.last);
+                            });
+                          },
+                        ),
                       ),
-                    ),
-                  );
-                },
-                onRestore: (index, message) {
-                  setState(() {
-                    _chatRepository.restoreMessage(index, message);
-                  });
-                },
+                    );
+                  },
+                  onRestore: (index, message) {
+                    setState(() {
+                      _chatRepository.restoreMessage(index, message);
+                    });
+                  },
+                ),
               ),
               _isBlocked
                   ? const Padding(

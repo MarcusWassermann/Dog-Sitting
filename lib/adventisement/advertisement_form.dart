@@ -2,11 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dogs_sitting/adventisement/logic/advertisement_logic.dart';
 import 'package:dogs_sitting/adventisement/widgets/advertisement_widget.dart';
 import 'package:dogs_sitting/models/user_text.dart';
-import 'package:dogs_sitting/provider/user_text_provider.dart';
-import 'package:provider/provider.dart';
 
 class AdvertisementForm extends StatefulWidget {
   final TextEditingController postcodeEditingController;
@@ -26,7 +25,7 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
   void initState() {
     super.initState();
     _textEditingController = TextEditingController();
-    initStorage();
+    initStorage(); // Firebase Storage initialisieren
   }
 
   @override
@@ -36,25 +35,61 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
     super.dispose();
   }
 
-  void _saveData() async {
+  Future<UserText> createUserText(
+    String enteredText,
+    String postcode,
+    XFile? image,
+  ) async {
+    // ignore: unused_local_variable
+    Widget advertisementItem = buildAdvertisementWidget(enteredText, image);
+    return UserText(
+      enteredText,
+      id: '',
+      postcode: postcode,
+      imagePath: null,
+      isApproved: false,
+    );
+  }
+
+  Future<void> _saveData() async {
     String enteredText = _textEditingController.text;
     String postcode = widget.postcodeEditingController.text;
-    if (enteredText.isNotEmpty && postcode.isNotEmpty) {
-      UserText userText = await createUserText(
-        enteredText,
-        postcode,
-        _image,
-        context,
-      );
+    User? user = FirebaseAuth.instance.currentUser; // Benutzer abrufen
 
-      Provider.of<UserTextProvider>(context, listen: false)
-          .addUserText(userText);
+    if (enteredText.isNotEmpty && postcode.isNotEmpty && user != null) {
+      try {
+        // ignore: unused_local_variable
+        UserText userText = await createUserText(
+          enteredText,
+          postcode,
+          _image,
+        );
 
-      _textEditingController.clear();
-      widget.postcodeEditingController.clear();
-      setState(() {
-        _image = null;
-      });
+        await saveAdvertisement(
+            enteredText, postcode, _image, user.uid); // Benutzer-ID verwenden
+
+        setState(() {
+          _textEditingController.clear();
+          widget.postcodeEditingController.clear();
+          _image = null;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Daten erfolgreich gespeichert'),
+          duration: Duration(seconds: 2),
+        ));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Fehler beim Speichern der Daten: $e'),
+          duration: const Duration(seconds: 2),
+        ));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(
+            'Bitte füllen Sie alle erforderlichen Felder aus und stellen Sie sicher, dass der Benutzer authentifiziert ist'),
+        duration: Duration(seconds: 2),
+      ));
     }
   }
 
@@ -71,10 +106,9 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: null, // Entfernt die AppBar aus der AdvertisementForm
+      appBar: null,
       body: Stack(
         children: [
-          // Hintergrundbild
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -83,9 +117,8 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
               ),
             ),
           ),
-          // Formularelemente
           Positioned(
-            top: MediaQuery.of(context).padding.top, // Positioniert die Elemente unter der StatusBar
+            top: MediaQuery.of(context).padding.top,
             left: 0,
             right: 0,
             bottom: 0,
@@ -96,28 +129,30 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
                   buildFormBody(_image, _textEditingController, _uploadImage),
                   const SizedBox(height: 20.0),
                   SizedBox(
-                    width: 100,
+                    width: 150, // Angepasste Breite für 5 Zeichen
                     child: TextField(
                       controller: widget.postcodeEditingController,
-                      maxLength: 5,
+                      maxLength: 5, // Maximal 5 Zeichen
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Postcode eingeben',
                         filled: true,
                         fillColor: Colors.white,
-                        counterText: "",
+                        counterText:
+                            "", // Verhindert die Anzeige der Zähleranzeige
                       ),
                     ),
                   ),
                   const SizedBox(height: 320.0),
                   ElevatedButton(
-                    onPressed: _saveData,
+                    onPressed: () {
+                      _saveData();
+                    },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black, // Textfarbe schwarz
+                      backgroundColor: Colors.green, // Grüne Farbe
                     ),
-                    child: const Text('Daten speichern',
-                        style: TextStyle(color: Colors.white)), // Textfarbe weiß
+                    child: const Text('Daten speichern'),
                   ),
                 ],
               ),

@@ -1,11 +1,16 @@
-import 'package:dogs_sitting/data/abstract_database.dart';
+// ignore_for_file: library_prefixes
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:dogs_sitting/home/home_screen.dart';
-import 'package:dogs_sitting/provider/auth_ptovider.dart';
+import 'package:dogs_sitting/data/abstract_database.dart';
+import 'package:dogs_sitting/provider/auth_ptovider.dart'
+    as DogSittingAuthProvider;
 import 'package:dogs_sitting/provider/favoriten_provider.dart';
 import 'package:dogs_sitting/provider/user_text_provider.dart';
+import 'package:dogs_sitting/provider/emergency_provider.dart'; // Import des EmergencyContactProvider
 import 'package:provider/provider.dart';
+
+import 'home/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,9 +22,11 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(
+            create: (context) => DogSittingAuthProvider.AuthProvider()),
         ChangeNotifierProvider(create: (context) => FavoriteProvider()),
         ChangeNotifierProvider(create: (context) => UserTextProvider()),
+        ChangeNotifierProvider(create: (context) => EmergencyContactProvider()),
       ],
       child: const MyApp(),
     ),

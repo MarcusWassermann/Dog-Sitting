@@ -1,23 +1,23 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:dogs_sitting/profilepage/repository/create_profile_repository.dart';
 import 'package:dogs_sitting/profilepage/widgets/profile_avatar.dart';
 import 'package:dogs_sitting/profilepage/widgets/profile_text_field.dart';
 import 'package:flutter/material.dart';
 
-class CreateProfileForm extends StatelessWidget {
+class CreateProfileForm extends StatefulWidget {
   final TextEditingController usernameController;
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
   final TextEditingController ageController;
   final TextEditingController phoneNumberController;
   final TextEditingController emailController;
-  final TextEditingController additionalInfoController =
-      TextEditingController();
   final bool emergencyContact;
   final VoidCallback onSave;
   final void Function(bool?)? onEmergencyContactChanged;
   final CreateProfileRepository profileRepository;
 
-  CreateProfileForm({
+  const CreateProfileForm({
     super.key,
     required this.usernameController,
     required this.firstNameController,
@@ -30,6 +30,20 @@ class CreateProfileForm extends StatelessWidget {
     this.onEmergencyContactChanged,
     required this.profileRepository,
   });
+
+  @override
+  _CreateProfileFormState createState() => _CreateProfileFormState();
+}
+
+class _CreateProfileFormState extends State<CreateProfileForm> {
+  final TextEditingController additionalInfoController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    additionalInfoController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,28 +62,28 @@ class CreateProfileForm extends StatelessWidget {
                 const SizedBox(height: 16.0),
                 ProfileTextField(
                   labelText: 'Benutzername',
-                  controller: usernameController,
+                  controller: widget.usernameController,
                   width: 200.0,
                   height: 40.0,
                 ),
                 const SizedBox(height: 16.0),
                 ProfileTextField(
                   labelText: 'Vorname',
-                  controller: firstNameController,
+                  controller: widget.firstNameController,
                   width: 200.0,
                   height: 40.0,
                 ),
                 const SizedBox(height: 16.0),
                 ProfileTextField(
                   labelText: 'Nachname',
-                  controller: lastNameController,
+                  controller: widget.lastNameController,
                   width: 200.0,
                   height: 40.0,
                 ),
                 const SizedBox(height: 16.0),
                 ProfileTextField(
                   labelText: 'Alter',
-                  controller: ageController,
+                  controller: widget.ageController,
                   keyboardType: TextInputType.number,
                   width: 100.0,
                   height: 40.0,
@@ -77,16 +91,16 @@ class CreateProfileForm extends StatelessWidget {
                 const SizedBox(height: 16.0),
                 ProfileTextField(
                   labelText: 'Telefonnummer',
-                  controller: phoneNumberController,
+                  controller: widget.phoneNumberController,
                   keyboardType: TextInputType.phone,
                   width: 150.0,
                   height: 40.0,
-                  optional: !emergencyContact,
+                  optional: !widget.emergencyContact,
                 ),
                 const SizedBox(height: 16.0),
                 ProfileTextField(
                   labelText: 'E-Mail',
-                  controller: emailController,
+                  controller: widget.emailController,
                   keyboardType: TextInputType.emailAddress,
                   width: 300.0,
                   height: 40.0,
@@ -113,11 +127,12 @@ class CreateProfileForm extends StatelessWidget {
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () async {
-                    onEmergencyContactChanged?.call(!emergencyContact);
+                    widget.onEmergencyContactChanged
+                        ?.call(!widget.emergencyContact);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
-                        emergencyContact ? Colors.green : Colors.red,
+                        widget.emergencyContact ? Colors.green : Colors.red,
                     minimumSize: const Size(30, 30),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
@@ -127,7 +142,8 @@ class CreateProfileForm extends StatelessWidget {
                   child: Text(
                     'Notfall Kontakt',
                     style: TextStyle(
-                      color: emergencyContact ? Colors.white : Colors.black,
+                      color:
+                          widget.emergencyContact ? Colors.white : Colors.black,
                     ),
                   ),
                 ),
@@ -135,18 +151,18 @@ class CreateProfileForm extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     if (_areFieldsFilled()) {
-                      await profileRepository.saveProfileToFirestore({
-                        'username': usernameController.text,
-                        'firstName': firstNameController.text,
-                        'lastName': lastNameController.text,
-                        'age': ageController.text,
-                        'phoneNumber': phoneNumberController.text,
-                        'email': emailController.text,
-                        'emergencyContact': emergencyContact,
+                      await widget.profileRepository.saveProfileToFirestore({
+                        'username': widget.usernameController.text,
+                        'firstName': widget.firstNameController.text,
+                        'lastName': widget.lastNameController.text,
+                        'age': widget.ageController.text,
+                        'phoneNumber': widget.phoneNumberController.text,
+                        'email': widget.emailController.text,
+                        'emergencyContact': widget.emergencyContact,
                         'additionalInfo': additionalInfoController.text,
                       });
                       _resetFields();
-                      onSave();
+                      widget.onSave();
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -174,21 +190,21 @@ class CreateProfileForm extends StatelessWidget {
   }
 
   void _resetFields() {
-    usernameController.clear();
-    firstNameController.clear();
-    lastNameController.clear();
-    ageController.clear();
-    phoneNumberController.clear();
-    emailController.clear();
+    widget.usernameController.clear();
+    widget.firstNameController.clear();
+    widget.lastNameController.clear();
+    widget.ageController.clear();
+    widget.phoneNumberController.clear();
+    widget.emailController.clear();
     additionalInfoController.clear();
   }
 
   bool _areFieldsFilled() {
-    return usernameController.text.isNotEmpty &&
-        firstNameController.text.isNotEmpty &&
-        lastNameController.text.isNotEmpty &&
-        ageController.text.isNotEmpty &&
-        phoneNumberController.text.isNotEmpty &&
-        emailController.text.isNotEmpty;
+    return widget.usernameController.text.isNotEmpty &&
+        widget.firstNameController.text.isNotEmpty &&
+        widget.lastNameController.text.isNotEmpty &&
+        widget.ageController.text.isNotEmpty &&
+        widget.phoneNumberController.text.isNotEmpty &&
+        widget.emailController.text.isNotEmpty;
   }
 }

@@ -122,7 +122,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             filled: true,
           ),
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 24.0),
         TextField(
           controller: _firstNameController,
           decoration: const InputDecoration(
@@ -132,7 +132,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             filled: true,
           ),
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 24.0),
         TextField(
           controller: _lastNameController,
           decoration: const InputDecoration(
@@ -142,7 +142,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             filled: true,
           ),
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 78.0),
         TextField(
           controller: _emailController,
           decoration: const InputDecoration(
@@ -164,7 +164,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           ),
         ),
         const SizedBox(
-            height: 220.0), // Zusätzlicher Platz unter dem letzten Textfeld
+            height: 120.0), // Zusätzlicher Platz unter dem letzten Textfeld
         ElevatedButton(
           onPressed: _isInputValid ? _registerUser : null,
           style: ElevatedButton.styleFrom(

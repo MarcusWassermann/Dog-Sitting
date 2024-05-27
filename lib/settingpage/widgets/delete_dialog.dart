@@ -1,40 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:dogs_sitting/provider/user_text_provider.dart';
 
 class DeleteDialog extends StatelessWidget {
-  const DeleteDialog({super.key, required String action});
+  final String action;
+  final Function onDelete;
+
+  const DeleteDialog({
+    super.key,
+    required this.action,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Confirmation"),
-      content: const Text("Are you sure you want to delete all user texts?"),
+      title: const Text("Bestätigung"),
+      content: Text("Möchten Sie $action wirklich löschen?"),
       actions: [
         TextButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text("Cancel"),
+          child: const Text("Abbrechen"),
         ),
         TextButton(
           onPressed: () {
-            Provider.of<UserTextProvider>(context, listen: false)
-                .deleteAllUserTexts();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('User texts deleted'),
-                action: SnackBarAction(
-                  label: 'Undo',
-                  onPressed: () {
-                    // Implement the undo action here
-                  },
-                ),
-              ),
-            );
-            Navigator.pop(context);
+            onDelete();
+            Navigator.pop(
+                context); // Sicherstellen, dass der Dialog nach der Aktion geschlossen wird
           },
-          child: const Text("Delete"),
+          child: const Text("Löschen"),
         ),
       ],
     );
