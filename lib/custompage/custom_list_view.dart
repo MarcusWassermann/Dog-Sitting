@@ -169,16 +169,17 @@ class _CustomListViewScreenState extends State<CustomListViewScreen>
                                 color: Colors.grey,
                               ),
                         title: Text(
-                          advertisement
-                              .enteredText, // Hier wird enteredText verwendet
+                          advertisement.enteredText,
                           style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontSize: 16, // Schriftgröße verringern
+                            fontWeight: FontWeight.normal, // Weniger fett
                             color: Colors.black,
                           ),
                         ),
                         subtitle: Text(
-                          advertisement.postcode, // Postleitzahl anzeigen
+                          'Postleitzahl: ${advertisement.postcode}',
                           style: const TextStyle(
+                            fontSize: 14, // Schriftgröße verringern
                             color: Colors.black,
                           ),
                         ),
@@ -211,4 +212,3 @@ class _CustomListViewScreenState extends State<CustomListViewScreen>
     );
   }
 }
-
