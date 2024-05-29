@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+
 
 class EmergencyContactRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -19,9 +19,6 @@ class EmergencyContactRepository {
         return ''; // Wenn das Dokument nicht existiert, gib einen leeren String zurück
       }
     } catch (error) {
-      if (kDebugMode) {
-        print('Fehler beim Abrufen des Notfallkontakts: $error');
-      }
       return ''; // Im Fehlerfall gib ebenfalls einen leeren String zurück
     }
   }

@@ -21,16 +21,33 @@ class AbstractDatabase {
     return await openDatabase(
       path,
       version: 1,
-      onCreate: _createDB,
+      onCreate: (db, version) {
+        _createAdvertisementsTable(db, version);
+        _createProfilesTable(db,
+            version); // Neue Methode zum Erstellen der Profil-Tabelle hinzufügen
+      },
     );
   }
 
-  Future<void> _createDB(Database db, int version) async {
+  Future<void> _createAdvertisementsTable(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE my_table(
+      CREATE TABLE advertisements (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        text TEXT NOT NULL,
+        postcode TEXT NOT NULL,
+        imagePath TEXT
+      )
+    ''');
+  }
+
+  // Neue Methode zum Erstellen der Profil-Tabelle hinzufügen
+  Future<void> _createProfilesTable(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE profiles (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        age INTEGER NOT NULL
+        description TEXT,
+        postcode TEXT NOT NULL
       )
     ''');
   }

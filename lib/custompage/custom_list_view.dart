@@ -1,9 +1,12 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:dogs_sitting/custompage/sitter_list_view.dart';
 import 'package:dogs_sitting/custompage/repository/custom_repository.dart';
 import 'package:dogs_sitting/models/user_text.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
+import 'package:dogs_sitting/provider/favoriten_provider.dart';
 
 class CustomListViewScreen extends StatefulWidget {
   const CustomListViewScreen({super.key});
@@ -12,16 +15,40 @@ class CustomListViewScreen extends StatefulWidget {
   _CustomListViewScreenState createState() => _CustomListViewScreenState();
 }
 
-class _CustomListViewScreenState extends State<CustomListViewScreen> {
+class _CustomListViewScreenState extends State<CustomListViewScreen>
+    with SingleTickerProviderStateMixin {
   String searchQuery = '';
   bool isSearchInitiated = false;
   List<UserText> advertisements = [];
   final TextEditingController _searchController = TextEditingController();
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    loadAdvertisements();
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _tabController.dispose();
     super.dispose();
+  }
+
+  Future<void> loadAdvertisements() async {
+    try {
+      List<UserText> fetchedAdvertisements =
+          await CustomRepository().getAdvertisements();
+      setState(() {
+        advertisements = fetchedAdvertisements;
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Fehler beim Laden der Anzeigen: $e');
+      }
+    }
   }
 
   void initiateSearch() async {
@@ -43,7 +70,7 @@ class _CustomListViewScreenState extends State<CustomListViewScreen> {
       });
     } catch (e) {
       if (kDebugMode) {
-        print('Fehler beim Abrufen der Anzeigen: $e');
+        debugPrint('Fehler beim Abrufen der Anzeigen: $e');
       }
       setState(() {
         advertisements = [];
@@ -76,59 +103,112 @@ class _CustomListViewScreenState extends State<CustomListViewScreen> {
           ),
           style: const TextStyle(color: Colors.black),
         ),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(
+              child: Text(
+                'Anzeigen',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Tab(
+              child: Text(
+                'Sitter',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
       ),
-      body: Stack(
+      body: TabBarView(
+        controller: _tabController,
         children: [
-          Image.asset(
-            'assets/16868426.jpg',
-            fit: BoxFit.cover,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-          ),
-          Positioned.fill(
-            child: advertisements.isEmpty
-                ? const Center(
-                    child: Text(
-                      'Geben Sie eine Postleitzahl ein',
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: advertisements.length,
-                    itemBuilder: (context, index) {
-                      UserText advertisement = advertisements[index];
-                      return Card(
-                        child: ListTile(
-                          leading: advertisement.imagePath != null
-                              ? Image.network(
-                                  advertisement.imagePath!,
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                )
-                              : Container(
-                                  width: 100,
-                                  height: 100,
-                                  color: Colors.grey,
-                                ),
-                          title: Text(
-                            advertisement.text,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                          subtitle: Text(
-                            'Postleitzahl: ${advertisement.postcode}',
-                            style: const TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-          ),
+          _buildAdvertisementsList(),
+          const ProfileListView(),
         ],
       ),
     );
   }
+
+  Widget _buildAdvertisementsList() {
+    return Stack(
+      children: [
+        Image.asset(
+          'assets/16868426.jpg',
+          fit: BoxFit.cover,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+        ),
+        Positioned.fill(
+          child: advertisements.isEmpty
+              ? const Center(
+                  child: Text(
+                    'Geben Sie eine Postleitzahl ein',
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: advertisements.length,
+                  itemBuilder: (context, index) {
+                    UserText advertisement = advertisements[index];
+                    return Card(
+                      child: ListTile(
+                        leading: advertisement.imagePath != null
+                            ? Image.network(
+                                advertisement.imagePath!,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              )
+                            : Container(
+                                width: 100,
+                                height: 100,
+                                color: Colors.grey,
+                              ),
+                        title: Text(
+                          advertisement
+                              .enteredText, // Hier wird enteredText verwendet
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        subtitle: Text(
+                          advertisement.postcode, // Postleitzahl anzeigen
+                          style: const TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        trailing: Consumer<FavoriteProvider>(
+                          builder: (context, favoriteProvider, _) {
+                            return IconButton(
+                              icon: Icon(
+                                  favoriteProvider.isFavorite(advertisement)
+                                      ? Icons.favorite
+                                      : Icons.favorite_border),
+                              onPressed: () {
+                                if (favoriteProvider
+                                    .isFavorite(advertisement)) {
+                                  favoriteProvider
+                                      .removeFromFavorites(advertisement);
+                                } else {
+                                  favoriteProvider
+                                      .addToFavorites(advertisement);
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
+  }
 }
+

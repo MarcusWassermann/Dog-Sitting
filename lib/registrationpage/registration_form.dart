@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegistrationForm extends StatefulWidget {
-  const RegistrationForm({super.key,required this.onRegistrationSuccess});
+  const RegistrationForm({super.key, required this.onRegistrationSuccess});
 
   final VoidCallback onRegistrationSuccess;
 
@@ -22,6 +22,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordRepeatController =
+      TextEditingController();
 
   bool _isInputValid = false;
 
@@ -33,6 +35,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     _lastNameController.addListener(_validateInput);
     _emailController.addListener(_validateInput);
     _passwordController.addListener(_validateInput);
+    _passwordRepeatController.addListener(_validateInput);
   }
 
   @override
@@ -42,6 +45,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     _lastNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _passwordRepeatController.dispose();
     super.dispose();
   }
 
@@ -51,7 +55,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
           _firstNameController.text.isNotEmpty &&
           _lastNameController.text.isNotEmpty &&
           _emailController.text.isNotEmpty &&
-          _passwordController.text.isNotEmpty;
+          _passwordController.text.isNotEmpty &&
+          _passwordController.text == _passwordRepeatController.text;
     });
   }
 
@@ -61,6 +66,17 @@ class _RegistrationFormState extends State<RegistrationForm> {
     final String lastName = _lastNameController.text.trim();
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
+    final String passwordRepeat = _passwordRepeatController.text.trim();
+
+    if (password != passwordRepeat) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Passwörter stimmen nicht überein!'),
+          duration: Duration(seconds: 10),
+        ),
+      );
+      return;
+    }
 
     try {
       final UserCredential userCredential =
@@ -163,15 +179,25 @@ class _RegistrationFormState extends State<RegistrationForm> {
             filled: true,
           ),
         ),
+        const SizedBox(height: 16.0),
+        TextField(
+          controller: _passwordRepeatController,
+          obscureText: true,
+          decoration: const InputDecoration(
+            labelText: 'Passwort wiederholen',
+            border: OutlineInputBorder(),
+            fillColor: Colors.white,
+            filled: true,
+          ),
+        ),
         const SizedBox(
             height: 120.0), // Zusätzlicher Platz unter dem letzten Textfeld
         ElevatedButton(
           onPressed: _isInputValid ? _registerUser : null,
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: _isInputValid
-                ? Colors.blue
-                : Colors
-                    .grey, // Textfarbe
+            foregroundColor: Colors.white,
+            backgroundColor:
+                _isInputValid ? Colors.blue : Colors.grey, // Textfarbe
           ),
           child: const Text('Registrieren'),
         ),

@@ -44,7 +44,7 @@ class SettingsPage extends StatelessWidget {
                   _showDeleteConfirmation(context, "Profil löschen", () {
                     Provider.of<AuthProvider>(context, listen: false)
                         .deleteProfile();
-                    Navigator.pop(context); // Close the dialog after the action
+                    Navigator.pop(context);
                   });
                 },
               ),
@@ -53,11 +53,7 @@ class SettingsPage extends StatelessWidget {
                 context,
                 'Anzeige löschen',
                 () {
-                  _showDeleteConfirmation(context, "Anzeige löschen", () {
-                    Provider.of<AuthProvider>(context, listen: false)
-                        .deleteAd();
-                    Navigator.pop(context); // Close the dialog after the action
-                  });
+                  _deleteAd(context);
                 },
               ),
               const SizedBox(height: 250),
@@ -69,7 +65,7 @@ class SettingsPage extends StatelessWidget {
                       context, "Als Notfallkontakt entfernen", () {
                     Provider.of<AuthProvider>(context, listen: false)
                         .removeAsEmergencyContact();
-                    Navigator.pop(context); // Close the dialog after the action
+                    Navigator.pop(context);
                   });
                 },
               ),
@@ -80,7 +76,7 @@ class SettingsPage extends StatelessWidget {
                 () {
                   _showDeleteConfirmation(context, "Abmelden", () {
                     Provider.of<AuthProvider>(context, listen: false).signOut();
-                    Navigator.pop(context); // Close the dialog after the action
+                    Navigator.pop(context);
                   });
                 },
               ),
@@ -91,7 +87,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  // A helper method to build ElevatedButton widgets
   Widget _buildElevatedButton(
       BuildContext context, String text, VoidCallback onPressed) {
     return ElevatedButton(
@@ -106,7 +101,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  // A helper method to show the confirmation dialog
   void _showDeleteConfirmation(
       BuildContext context, String action, Function onDelete) {
     showDialog(
@@ -118,5 +112,12 @@ class SettingsPage extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _deleteAd(BuildContext context) {
+    _showDeleteConfirmation(context, "Anzeige löschen", () {
+      Provider.of<AuthProvider>(context, listen: false).deleteAd();
+      Navigator.pop(context);
+    });
   }
 }

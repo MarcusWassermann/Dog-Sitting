@@ -47,7 +47,7 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
       id: '',
       postcode: postcode,
       imagePath: null,
-      isApproved: false,
+      isApproved: false, enteredText: '',
     );
   }
 

@@ -1,8 +1,8 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:dogs_sitting/gallerypage/upload_page.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:logger/logger.dart';
 
 class GalleryPage extends StatefulWidget {
@@ -13,58 +13,19 @@ class GalleryPage extends StatefulWidget {
 }
 
 class _GalleryPageState extends State<GalleryPage> {
-  final List<File> _images = [
-    File('path/to/your/image1.jpg'),
-    File('path/to/your/image2.jpg'),
-  ]; // Beispielbilder hinzugefügt
+  final List<File> _images = []; // Liste für hochgeladene Bilder
   final logger = Logger();
-  final Random _random = Random();
-
-  // Methode zum Hochladen eines Bildes in Firebase Storage
-  Future<void> _uploadImage(File image) async {
-    try {
-      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('images/${DateTime.now().millisecondsSinceEpoch}.jpg');
-      firebase_storage.UploadTask uploadTask = ref.putFile(image);
-      await uploadTask.whenComplete(() => logger.d('Bild hochgeladen'));
-    } catch (e) {
-      logger.e('Fehler beim Hochladen des Bildes: $e');
-    }
-  }
-
-  // Widget zum Aufbau einer Bildkarte
-  Widget _buildImageCard(File image) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(color: Colors.black, width: 2.0),
-      ),
-      margin: const EdgeInsets.all(8.0),
-      height: 150,
-      width: 150,
-      child: Center(
-        child: Text(
-          'Bild ${_images.indexOf(image) + 1}',
-          style: const TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
+    const int gridCount = 3; // Anzahl der Spalten im Raster
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Galerie'),
         backgroundColor: Colors.transparent, // Transparente AppBar
-        elevation: 0, // Keine Schatten unter der AppBar
+        elevation: 0, // Kein Schatten unter der AppBar
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -96,7 +57,13 @@ class _GalleryPageState extends State<GalleryPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const UploadPage()),
-                );
+                ).then((uploadedImage) {
+                  if (uploadedImage != null) {
+                    setState(() {
+                      _images.add(uploadedImage);
+                    });
+                  }
+                });
               },
             ),
           ],
@@ -111,26 +78,65 @@ class _GalleryPageState extends State<GalleryPage> {
               fit: BoxFit.cover,
             ),
           ),
-          // Transparenter Scaffold, damit der Hintergrund über die AppBar hinaus sichtbar ist
-          Scaffold(
-            backgroundColor: Colors.transparent,
-            body: SingleChildScrollView(
-              child: Stack(
-                children: [
-                  for (int i = 0; i < _images.length; i++)
-                    Positioned(
-                      left: _random.nextDouble() *
-                          (MediaQuery.of(context).size.width - 150),
-                      top: _random.nextDouble() *
-                          (MediaQuery.of(context).size.height * 2 - 150),
-                      child: _buildImageCard(_images[i]),
-                    ),
-                ],
-              ),
+          // Raster von Bildcontainern
+          GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: gridCount,
+              childAspectRatio: 1, // Quadratische Container
             ),
+            itemCount: _images.length + gridCount, // Anzahl der Container
+            itemBuilder: (context, index) {
+              if (index < _images.length) {
+                return _buildImageCard(_images[index]);
+              } else {
+                // Erster Container bleibt unverändert
+                if (index == gridCount) {
+                  return _buildEmptyImageCard();
+                }
+                // Mittlerer Container wird links geneigt
+                else if (index == gridCount + 1) {
+                  return Transform.rotate(
+                    angle: -0.9, // Linksneigung um 0.1 Radiant
+                    child: _buildEmptyImageCard(),
+                  );
+                }
+                // Letzter Container wird rechts geneigt
+                else {
+                  return Transform.rotate(
+                    angle: 0.3, // Rechtsneigung um 0.1 Radiant
+                    child: _buildEmptyImageCard(),
+                  );
+                }
+              }
+            },
           ),
         ],
       ),
+    );
+  }
+
+  // Widget zum Aufbau einer Bildkarte
+  Widget _buildImageCard(File image) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: Colors.black, width: 2.0),
+      ),
+      margin: const EdgeInsets.all(8.0),
+      child: Image.file(image, fit: BoxFit.cover),
+    );
+  }
+
+  // Widget zum Aufbau eines leeren Bildcontainers
+  Widget _buildEmptyImageCard() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[300], // Grauer Hintergrund für leere Container
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(color: Colors.black, width: 2.0),
+      ),
+      margin: const EdgeInsets.all(8.0),
     );
   }
 }

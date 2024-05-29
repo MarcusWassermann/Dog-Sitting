@@ -8,6 +8,7 @@ import 'package:dogs_sitting/provider/auth_ptovider.dart'
 import 'package:dogs_sitting/provider/favoriten_provider.dart';
 import 'package:dogs_sitting/provider/user_text_provider.dart';
 import 'package:dogs_sitting/provider/emergency_provider.dart'; // Import des EmergencyContactProvider
+import 'package:dogs_sitting/provider/user_provider.dart'; // Import des neuen Benutzer-Providers
 import 'package:provider/provider.dart';
 
 import 'home/home_screen.dart';
@@ -27,6 +28,9 @@ void main() async {
         ChangeNotifierProvider(create: (context) => FavoriteProvider()),
         ChangeNotifierProvider(create: (context) => UserTextProvider()),
         ChangeNotifierProvider(create: (context) => EmergencyContactProvider()),
+        ChangeNotifierProvider(
+            create: (context) =>
+                UserProvider()), // Hinzugefügter Benutzer-Provider
       ],
       child: const MyApp(),
     ),

@@ -1,7 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:dogs_sitting/provider/emergency_provider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,13 +33,15 @@ class _EmergencyContactScreenState extends State<EmergencyContactScreen> {
       final emergencyContactProvider =
           Provider.of<EmergencyContactProvider>(context, listen: false);
       await emergencyContactProvider.fetchEmergencyContact(widget.documentId);
-      if (kDebugMode) {
-        print('Emergency contact fetched in initState');
-      }
+      // Entfernen der Debug-Ausgabe
+      // if (kDebugMode) {
+      //   print('Emergency contact fetched in initState');
+      // }
     } catch (error) {
-      if (kDebugMode) {
-        print('Error fetching emergency contact: $error');
-      }
+      // Entfernen der Fehlerausgabe
+      // if (kDebugMode) {
+      //   print('Error fetching emergency contact: $error');
+      // }
     }
   }
 
@@ -57,9 +58,10 @@ class _EmergencyContactScreenState extends State<EmergencyContactScreen> {
       _emergencyMessage = message;
     });
 
-    if (kDebugMode) {
-      print('Trigger emergency message: $message');
-    }
+    // Entfernen der Debug-Ausgabe
+    // if (kDebugMode) {
+    //   print('Trigger emergency message: $message');
+    // }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),

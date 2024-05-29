@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:dogs_sitting/profilepage/repository/create_profile_repository.dart';
 import 'package:dogs_sitting/profilepage/widgets/profile_avatar.dart';
@@ -9,7 +9,7 @@ class CreateProfileForm extends StatefulWidget {
   final TextEditingController usernameController;
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
-  final TextEditingController ageController;
+  final TextEditingController zipCodeController;
   final TextEditingController phoneNumberController;
   final TextEditingController emailController;
   final bool emergencyContact;
@@ -22,7 +22,7 @@ class CreateProfileForm extends StatefulWidget {
     required this.usernameController,
     required this.firstNameController,
     required this.lastNameController,
-    required this.ageController,
+    required this.zipCodeController,
     required this.phoneNumberController,
     required this.emailController,
     required this.emergencyContact,
@@ -82,8 +82,8 @@ class _CreateProfileFormState extends State<CreateProfileForm> {
                 ),
                 const SizedBox(height: 16.0),
                 ProfileTextField(
-                  labelText: 'Alter',
-                  controller: widget.ageController,
+                  labelText: 'PLZ',
+                  controller: widget.zipCodeController,
                   keyboardType: TextInputType.number,
                   width: 100.0,
                   height: 40.0,
@@ -151,22 +151,32 @@ class _CreateProfileFormState extends State<CreateProfileForm> {
                 ElevatedButton(
                   onPressed: () async {
                     if (_areFieldsFilled()) {
-                      await widget.profileRepository.saveProfileToFirestore({
-                        'username': widget.usernameController.text,
-                        'firstName': widget.firstNameController.text,
-                        'lastName': widget.lastNameController.text,
-                        'age': widget.ageController.text,
-                        'phoneNumber': widget.phoneNumberController.text,
-                        'email': widget.emailController.text,
-                        'emergencyContact': widget.emergencyContact,
-                        'additionalInfo': additionalInfoController.text,
-                      });
-                      _resetFields();
-                      widget.onSave();
+                      try {
+                        await widget.profileRepository.saveProfileToFirestore({
+                          'username': widget.usernameController.text,
+                          'firstName': widget.firstNameController.text,
+                          'lastName': widget.lastNameController.text,
+                          'zipCode': widget.zipCodeController.text,
+                          'phoneNumber': widget.phoneNumberController.text,
+                          'email': widget.emailController.text,
+                          'emergencyContact': widget.emergencyContact,
+                          'additionalInfo': additionalInfoController.text,
+                        });
+                        _resetFields();
+                        widget.onSave();
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                                Text('Fehler beim Speichern des Profils: $e'),
+                          ),
+                        );
+                      }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Bitte füllen Sie alle Felder aus.'),
+                          content: Text(
+                              'Bitte füllen Sie alle erforderlichen Felder aus.'),
                         ),
                       );
                     }
@@ -193,18 +203,23 @@ class _CreateProfileFormState extends State<CreateProfileForm> {
     widget.usernameController.clear();
     widget.firstNameController.clear();
     widget.lastNameController.clear();
-    widget.ageController.clear();
+    widget.zipCodeController.clear();
     widget.phoneNumberController.clear();
     widget.emailController.clear();
     additionalInfoController.clear();
   }
 
   bool _areFieldsFilled() {
-    return widget.usernameController.text.isNotEmpty &&
+    bool areFieldsFilled = widget.usernameController.text.isNotEmpty &&
         widget.firstNameController.text.isNotEmpty &&
         widget.lastNameController.text.isNotEmpty &&
-        widget.ageController.text.isNotEmpty &&
-        widget.phoneNumberController.text.isNotEmpty &&
+        widget.zipCodeController.text.isNotEmpty &&
         widget.emailController.text.isNotEmpty;
+
+    if (widget.emergencyContact) {
+      areFieldsFilled &= widget.phoneNumberController.text.isNotEmpty;
+    }
+
+    return areFieldsFilled;
   }
 }

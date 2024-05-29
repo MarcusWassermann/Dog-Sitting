@@ -168,7 +168,7 @@ class AppWayScreen extends StatelessWidget {
           ),
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.black,
-            backgroundColor: Colors.white, // Textfarbe anpassen
+            backgroundColor: Colors.white, // Hintergrundfarbe anpassen
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
               side: const BorderSide(color: Colors.black),

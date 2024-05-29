@@ -22,7 +22,7 @@ dependencies:
   firebase_database: ^10.5.5
   logger: ^2.2.0
   path: ^1.9.0
-  shared_preferences: ^2.0.13
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
@@ -50,3 +50,4 @@ flutter:
     - assets/18940716.jpg
     - assets/3752118.jpg
     - assets/3080322.jpg
+    - assets/14116837.jpg

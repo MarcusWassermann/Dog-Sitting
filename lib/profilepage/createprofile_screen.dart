@@ -6,7 +6,6 @@ import 'package:dogs_sitting/profilepage/create_profile_form.dart';
 import 'package:dogs_sitting/profilepage/repository/create_profile_repository.dart';
 import 'package:flutter/material.dart';
 
-
 class CreateProfileScreen extends StatefulWidget {
   const CreateProfileScreen({super.key});
 
@@ -18,7 +17,8 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   late final TextEditingController _usernameController;
   late final TextEditingController _firstNameController;
   late final TextEditingController _lastNameController;
-  late final TextEditingController _ageController;
+  late final TextEditingController
+      _zipCodeController; // PLZ-Controller hinzugefügt
   late final TextEditingController _phoneNumberController;
   late final TextEditingController _emailController;
   bool _emergencyContact = false;
@@ -30,7 +30,8 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     _usernameController = TextEditingController();
     _firstNameController = TextEditingController();
     _lastNameController = TextEditingController();
-    _ageController = TextEditingController();
+    _zipCodeController =
+        TextEditingController(); // PLZ-Controller initialisiert
     _phoneNumberController = TextEditingController();
     _emailController = TextEditingController();
   }
@@ -40,7 +41,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     _usernameController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
-    _ageController.dispose();
+    _zipCodeController.dispose(); // PLZ-Controller entsorgt
     _phoneNumberController.dispose();
     _emailController.dispose();
     super.dispose();
@@ -77,7 +78,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               usernameController: _usernameController,
               firstNameController: _firstNameController,
               lastNameController: _lastNameController,
-              ageController: _ageController,
+              zipCodeController: _zipCodeController, // PLZ-Controller übergeben
               phoneNumberController: _phoneNumberController,
               emailController: _emailController,
               emergencyContact: _emergencyContact,
