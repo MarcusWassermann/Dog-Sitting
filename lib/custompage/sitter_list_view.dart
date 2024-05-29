@@ -5,7 +5,7 @@ import 'package:dogs_sitting/custompage/repository/profile_repository.dart';
 import 'package:dogs_sitting/models/user_profile.dart';
 
 class ProfileListView extends StatefulWidget {
-  const ProfileListView({Key? key}) : super(key: key);
+  const ProfileListView({super.key});
 
   @override
   _ProfileListViewState createState() => _ProfileListViewState();
@@ -64,7 +64,7 @@ class _ProfileListViewState extends State<ProfileListView> {
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 12.0, horizontal: 16.0),
-                    leading: CircleAvatar(
+                    leading: const CircleAvatar(
                       backgroundColor: Colors.grey,
                       radius: 60, // Größe des Avatars erhöht
                       child: Icon(Icons.person, size: 72),
@@ -81,7 +81,7 @@ class _ProfileListViewState extends State<ProfileListView> {
                           profile.text ?? '',
                           style: const TextStyle(fontSize: 16),
                         ),
-                        Container(
+                        SizedBox(
                           height: 24, // Höhe des Containers für den Abstand
                           child: Row(
                             children: [
