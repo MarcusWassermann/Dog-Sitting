@@ -23,6 +23,8 @@ class UserProfile {
     );
   }
 
+  get postcode => null;
+
   Map<String, dynamic> toJson() {
     return {
       'imagePath': imagePath,

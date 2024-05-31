@@ -1,6 +1,6 @@
 import 'package:dogs_sitting/my_page/my_screen.dart';
+import 'package:dogs_sitting/welcome_page/welcome_page.dart'; // Importiere die WelcomePage
 import 'package:flutter/material.dart';
-
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -17,33 +17,41 @@ class HomeScreen extends StatelessWidget {
           );
         }
       },
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  const WelcomePage()), // Navigiere zur WelcomePage
+        );
+      },
       child: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/1423213-3715587.jpg'),
-            fit: BoxFit.cover, // Bildgröße anpassen
+            fit: BoxFit.cover,
             alignment: Alignment(
-                0.3, -0.5), // Horizontal: 0.5 (Mitte), Vertikal: -0.5 (oben)
+              0.3,
+              -0.5,
+            ),
           ),
         ),
-        width: double
-            .infinity, // Bild über die gesamte Breite des Bildschirms strecken
-        height: double
-            .infinity, // Bild über die gesamte Höhe des Bildschirms strecken
+        width: double.infinity,
+        height: double.infinity,
         child: const Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              height: 80, 
+              height: 80,
             ),
             Center(
               child: Text(
                 'Dog Sitting',
                 style: TextStyle(
-                  fontSize: 40.0, // Adjust the font size as needed
+                  fontSize: 40.0,
                   color: Color.fromARGB(255, 27, 24, 24),
-                  fontFamily: 'YourOtherFont', // Anderes Schriftart
-                  fontWeight: FontWeight.bold, // Fettschrift
+                  fontFamily: 'YourOtherFont',
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),

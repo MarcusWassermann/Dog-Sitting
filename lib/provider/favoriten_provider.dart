@@ -1,34 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:dogs_sitting/models/user_profile.dart';
 import 'package:dogs_sitting/models/user_text.dart';
 
 class FavoriteProvider extends ChangeNotifier {
-  List<UserText> _favorites = [];
+  List<dynamic> _favorites = [];
 
-  List<UserText> get favorites => _favorites;
-
-  UserText? get container => _favorites.isNotEmpty ? _favorites.first : null;
+  List<dynamic> get favorites => _favorites;
 
   FavoriteProvider() {
     _loadFavorites();
   }
 
-  bool isFavorite(UserText userText) {
-    return _favorites.contains(userText);
+  bool isFavorite(dynamic item) {
+    return _favorites.contains(item);
   }
 
-  void addToFavorites(UserText userText) {
-    if (!_favorites.contains(userText)) {
-      _favorites.add(userText);
+  void addToFavorites(dynamic item) {
+    if (!_favorites.contains(item)) {
+      _favorites.add(item);
       _saveFavorites();
       notifyListeners();
     }
   }
 
-  void removeFromFavorites(UserText userText) {
-    if (_favorites.contains(userText)) {
-      _favorites.remove(userText);
+  void removeFromFavorites(dynamic item) {
+    if (_favorites.contains(item)) {
+      _favorites.remove(item);
       _saveFavorites();
       notifyListeners();
     }
@@ -39,15 +38,30 @@ class FavoriteProvider extends ChangeNotifier {
     final favoritesString = prefs.getString('favorites');
 
     if (favoritesString != null) {
-      final List<dynamic> favoriteList = json.decode(favoritesString);
-      _favorites = favoriteList.map((item) => UserText.fromJson(item)).toList();
+      _favorites = (json.decode(favoritesString) as List).map((item) {
+        if (item['type'] == 'user_profile') {
+          return UserProfile.fromJson(item);
+        } else if (item['type'] == 'user_text') {
+          return UserText.fromJson(item);
+        } else {
+          return null;
+        }
+      }).toList();
       notifyListeners();
     }
   }
 
   Future<void> _saveFavorites() async {
     final prefs = await SharedPreferences.getInstance();
-    final favoriteList = _favorites.map((item) => item.toJson()).toList();
+    final favoriteList = _favorites.map((item) {
+      if (item is UserProfile) {
+        return {'type': 'user_profile', ...item.toJson()};
+      } else if (item is UserText) {
+        return {'type': 'user_text', ...item.toJson()};
+      } else {
+        return null;
+      }
+    }).toList();
     prefs.setString('favorites', json.encode(favoriteList));
   }
 }

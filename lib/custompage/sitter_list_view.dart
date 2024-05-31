@@ -13,6 +13,9 @@ class ProfileListView extends StatefulWidget {
 
 class _ProfileListViewState extends State<ProfileListView> {
   List<UserProfile> profiles = [];
+  bool isSearchInitiated = false;
+  String searchQuery = '';
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -29,6 +32,30 @@ class _ProfileListViewState extends State<ProfileListView> {
       });
     } catch (e) {
       debugPrint('Error loading profiles: $e');
+    }
+  }
+
+  void initiateSearch() async {
+    setState(() {
+      isSearchInitiated = true;
+      searchQuery = _searchController.text;
+    });
+    _searchController.clear();
+
+    try {
+      List<UserProfile> fetchedProfiles =
+          await ProfileRepository().getProfiles();
+      List<UserProfile> filteredProfiles = fetchedProfiles.where((profile) {
+        return profile.zipCode == searchQuery;
+      }).toList();
+      setState(() {
+        profiles = filteredProfiles;
+      });
+    } catch (e) {
+      debugPrint('Error loading profiles: $e');
+      setState(() {
+        profiles = [];
+      });
     }
   }
 
@@ -56,47 +83,50 @@ class _ProfileListViewState extends State<ProfileListView> {
                 UserProfile profile = profiles[index];
                 return Container(
                   margin: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 16.0),
+                      vertical: 4.0, horizontal: 8.0),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(16.0),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 12.0, horizontal: 16.0),
-                    leading: const CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      radius: 60, // Größe des Avatars erhöht
-                      child: Icon(Icons.person, size: 72),
-                    ),
-                    title: Text(
-                      profile.username ?? '',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
                       children: [
-                        const SizedBox(height: 4),
-                        Text(
-                          profile.text ?? '',
-                          style: const TextStyle(fontSize: 16),
+                        const CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          radius: 30,
+                          child: Icon(Icons.person, size: 30),
                         ),
-                        SizedBox(
-                          height: 24, // Höhe des Containers für den Abstand
-                          child: Row(
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text(
+                                profile.username ?? '',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
                               Text(
                                 profile.zipCode ?? '',
                                 style: const TextStyle(
-                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 12,
                                 ),
                               ),
-                              const Spacer(), // Hinzugefügt, um den Abstand zu maximieren
+                              Text(
+                                profile.text ?? '',
+                                style: const TextStyle(fontSize: 4),
+                              ),
+                              Text(
+                                profile.additionalInfo ?? '',
+                                style: const TextStyle(fontSize: 12),
+                              ),
                             ],
                           ),
                         ),
-                        Text(profile.additionalInfo ?? ''),
                       ],
                     ),
                   ),

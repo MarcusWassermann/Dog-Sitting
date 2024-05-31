@@ -1,6 +1,9 @@
+// login_form.dart
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
   final TextEditingController usernameController;
   final TextEditingController passwordController;
   final VoidCallback onLogin;
@@ -15,6 +18,19 @@ class LoginForm extends StatelessWidget {
   });
 
   @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  bool _passwordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordVisible = false; // Password is initially obscure
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -26,12 +42,17 @@ class LoginForm extends StatelessWidget {
               height: 50,
               width: 200,
               child: TextField(
-                controller: usernameController,
+                controller: widget.usernameController,
+                style: const TextStyle(color: Colors.black), // Set text color
                 decoration: InputDecoration(
                   labelText: 'Benutzername',
+                  labelStyle:
+                      const TextStyle(color: Colors.black), // Set label text color
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
+                  filled: true,
+                  fillColor: Colors.white, // Set background color
                 ),
               ),
             ),
@@ -40,24 +61,45 @@ class LoginForm extends StatelessWidget {
               height: 50,
               width: 200,
               child: TextField(
-                controller: passwordController,
+                controller: widget.passwordController,
+                obscureText: !_passwordVisible,
+                style: const TextStyle(color: Colors.black), // Set text color
                 decoration: InputDecoration(
                   labelText: 'Passwort',
+                  labelStyle:
+                      const TextStyle(color: Colors.black), // Set label text color
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
+                  filled: true,
+                  fillColor: Colors.white, // Set background color
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _passwordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.black, // Set icon color
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
+                  ),
                 ),
-                obscureText: true,
               ),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: onLogin,
+              onPressed: widget.onLogin,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black, backgroundColor: Colors.white, // Set button text color
+              ),
               child: const Text('Einloggen'),
             ),
             const SizedBox(height: 10),
             GestureDetector(
-              onTap: onForgotPassword,
+              onTap: widget.onForgotPassword,
               child: const Align(
                 alignment: Alignment.center,
                 child: Text(
@@ -73,30 +115,5 @@ class LoginForm extends StatelessWidget {
   }
 }
 
-// ignore: unused_element
-void _onForgotPassword(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Passwort zurücksetzen'),
-        content: TextField(
-          decoration: const InputDecoration(labelText: 'E-Mail-Adresse'),
-          onChanged: (value) {
-            // Hier kannst du die Eingabe der E-Mail-Adresse verarbeiten
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              // Hier kannst du die E-Mail senden oder den Benutzer zur
-              // Seite zum Zurücksetzen des Passworts weiterleiten.
-              Navigator.pop(context); // Dialog schließen
-            },
-            child: const Text('Absenden'),
-          ),
-        ],
-      );
-    },
-  );
-}
+
+

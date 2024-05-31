@@ -1,9 +1,7 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
+// ignore_for_file: library_private_types_in_public_api
 
-import 'package:flutter/foundation.dart';
+import 'package:dogs_sitting/registrationpage/logic/registration_logic.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegistrationForm extends StatefulWidget {
   const RegistrationForm({super.key, required this.onRegistrationSuccess});
@@ -15,8 +13,6 @@ class RegistrationForm extends StatefulWidget {
 }
 
 class _RegistrationFormState extends State<RegistrationForm> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -26,6 +22,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
       TextEditingController();
 
   bool _isInputValid = false;
+  bool _passwordVisible = false;
+  bool _passwordRepeatVisible = false;
 
   @override
   void initState() {
@@ -60,66 +58,50 @@ class _RegistrationFormState extends State<RegistrationForm> {
     });
   }
 
-  Future<void> _registerUser() async {
-    final String username = _usernameController.text.trim();
-    final String firstName = _firstNameController.text.trim();
-    final String lastName = _lastNameController.text.trim();
-    final String email = _emailController.text.trim();
-    final String password = _passwordController.text.trim();
-    final String passwordRepeat = _passwordRepeatController.text.trim();
+  void _registerUser() {
+    RegistrationLogic.registerUser(
+      context: context,
+      username: _usernameController.text.trim(),
+      firstName: _firstNameController.text.trim(),
+      lastName: _lastNameController.text.trim(),
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+      passwordRepeat: _passwordRepeatController.text.trim(),
+      onSuccess: widget.onRegistrationSuccess,
+    );
+  }
 
-    if (password != passwordRepeat) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Passwörter stimmen nicht überein!'),
-          duration: Duration(seconds: 10),
-        ),
-      );
-      return;
-    }
-
-    try {
-      final UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      await _firestore.collection('users').doc(userCredential.user!.uid).set({
-        'username': username,
-        'firstName': firstName,
-        'lastName': lastName,
-        'email': email,
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Erfolgreich registriert!'),
-          duration: Duration(seconds: 10),
-        ),
-      );
-
-      widget.onRegistrationSuccess();
-    } catch (e) {
-      if (kDebugMode) {
-        print('Fehler bei der Registrierung: $e');
-      }
-      if (e is FirebaseAuthException) {
-        if (kDebugMode) {
-          print('Firebase Auth Fehlercode: ${e.code}');
-        }
-        if (kDebugMode) {
-          print('Firebase Auth Fehlermeldung: ${e.message}');
-        }
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Fehler bei der Registrierung: $e'),
-          duration: const Duration(seconds: 10),
-        ),
-      );
-    }
+  InputDecoration _inputDecoration({
+    required String labelText,
+    required bool isEmpty,
+    required bool isPassword,
+    required VoidCallback onVisibilityToggle,
+    bool isPasswordVisible = false,
+  }) {
+    return InputDecoration(
+      labelText: labelText,
+      border: const OutlineInputBorder(),
+      fillColor: Colors.white,
+      filled: true,
+      errorBorder: isEmpty
+          ? const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 2.0),
+            )
+          : null,
+      focusedErrorBorder: isEmpty
+          ? const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 2.0),
+            )
+          : null,
+      suffixIcon: isPassword
+          ? IconButton(
+              icon: Icon(
+                isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              ),
+              onPressed: onVisibilityToggle,
+            )
+          : null,
+    );
   }
 
   @override
@@ -127,77 +109,84 @@ class _RegistrationFormState extends State<RegistrationForm> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const SizedBox(
-            height: 32.0), // Zusätzlicher Platz über dem ersten Textfeld
+        const SizedBox(height: 24.0),
         TextField(
           controller: _usernameController,
-          decoration: const InputDecoration(
+          decoration: _inputDecoration(
             labelText: 'Benutzername',
-            border: OutlineInputBorder(),
-            fillColor: Colors.white,
-            filled: true,
+            isEmpty: _usernameController.text.isEmpty,
+            isPassword: false,
+            onVisibilityToggle: () {},
           ),
         ),
         const SizedBox(height: 24.0),
         TextField(
           controller: _firstNameController,
-          decoration: const InputDecoration(
+          decoration: _inputDecoration(
             labelText: 'Vorname',
-            border: OutlineInputBorder(),
-            fillColor: Colors.white,
-            filled: true,
+            isEmpty: _firstNameController.text.isEmpty,
+            isPassword: false,
+            onVisibilityToggle: () {},
           ),
         ),
         const SizedBox(height: 24.0),
         TextField(
           controller: _lastNameController,
-          decoration: const InputDecoration(
+          decoration: _inputDecoration(
             labelText: 'Nachname',
-            border: OutlineInputBorder(),
-            fillColor: Colors.white,
-            filled: true,
+            isEmpty: _lastNameController.text.isEmpty,
+            isPassword: false,
+            onVisibilityToggle: () {},
           ),
         ),
-        const SizedBox(height: 78.0),
+        const SizedBox(height: 24.0),
         TextField(
           controller: _emailController,
-          decoration: const InputDecoration(
+          decoration: _inputDecoration(
             labelText: 'E-Mail',
-            border: OutlineInputBorder(),
-            fillColor: Colors.white,
-            filled: true,
+            isEmpty: _emailController.text.isEmpty,
+            isPassword: false,
+            onVisibilityToggle: () {},
           ),
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 24.0),
         TextField(
           controller: _passwordController,
-          obscureText: true,
-          decoration: const InputDecoration(
+          obscureText: !_passwordVisible,
+          decoration: _inputDecoration(
             labelText: 'Passwort',
-            border: OutlineInputBorder(),
-            fillColor: Colors.white,
-            filled: true,
+            isEmpty: _passwordController.text.isEmpty,
+            isPassword: true,
+            onVisibilityToggle: () {
+              setState(() {
+                _passwordVisible = !_passwordVisible;
+              });
+            },
+            isPasswordVisible: _passwordVisible,
           ),
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 24.0),
         TextField(
           controller: _passwordRepeatController,
-          obscureText: true,
-          decoration: const InputDecoration(
+          obscureText: !_passwordRepeatVisible,
+          decoration: _inputDecoration(
             labelText: 'Passwort wiederholen',
-            border: OutlineInputBorder(),
-            fillColor: Colors.white,
-            filled: true,
+            isEmpty: _passwordRepeatController.text.isEmpty,
+            isPassword: true,
+            onVisibilityToggle: () {
+              setState(() {
+                _passwordRepeatVisible = !_passwordRepeatVisible;
+              });
+            },
+            isPasswordVisible: _passwordRepeatVisible,
           ),
         ),
-        const SizedBox(
-            height: 120.0), // Zusätzlicher Platz unter dem letzten Textfeld
+        const SizedBox(height: 24.0),
         ElevatedButton(
           onPressed: _isInputValid ? _registerUser : null,
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
-            backgroundColor:
-                _isInputValid ? Colors.blue : Colors.grey, // Textfarbe
+            backgroundColor: _isInputValid ? Colors.blue : Colors.grey,
           ),
           child: const Text('Registrieren'),
         ),

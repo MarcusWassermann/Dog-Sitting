@@ -1,5 +1,3 @@
-// favorite_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dogs_sitting/provider/favoriten_provider.dart';
@@ -13,7 +11,8 @@ class FavoriteScreen extends StatelessWidget {
     final FavoriteProvider favoriteProvider =
         Provider.of<FavoriteProvider>(context);
 
-    final List<UserText> favorites = favoriteProvider.favorites;
+    final List<UserText> favorites =
+        favoriteProvider.favorites.cast<UserText>();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -51,7 +50,7 @@ class FavoriteScreen extends StatelessWidget {
 class FavoriteListItem extends StatelessWidget {
   final UserText favorite;
 
-  const FavoriteListItem({super.key, required this.favorite});
+  const FavoriteListItem({super.key,required this.favorite});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +79,7 @@ class FavoriteListItem extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                favorite.text,
+                favorite.enteredText,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 3,
                 style: const TextStyle(color: Colors.black),

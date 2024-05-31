@@ -33,7 +33,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/logo-transparent-png.png
+
     - assets/1423213-3715587.jpg
     - assets/1223825-2326936.jpg
     - assets/1147812.jpg
@@ -45,9 +45,9 @@ flutter:
     - assets/1906154.jpg
     - assets/19296629.jpg
     - assets/19225613.jpg
-    - assets/220938.jpg
     - assets/14475041.jpg
     - assets/18940716.jpg
     - assets/3752118.jpg
     - assets/3080322.jpg
     - assets/14116837.jpg
+    - assets/20067618.jpg

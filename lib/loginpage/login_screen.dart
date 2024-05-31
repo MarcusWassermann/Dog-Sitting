@@ -1,10 +1,11 @@
+// login_screen.dart
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:dogs_sitting/provider/auth_ptovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dogs_sitting/appwaypage/app_way_page.dart';
-
+import 'login_form.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -113,62 +114,11 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextFormField(
-                    controller: _usernameController,
-                    style: const TextStyle(color: Colors.black),
-                    decoration: const InputDecoration(
-                      labelText: 'Benutzername',
-                      labelStyle: TextStyle(color: Colors.black),
-                      fillColor: Colors.white,
-                      filled: true,
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: _passwordController,
-                    style: const TextStyle(color: Colors.black),
-                    decoration: const InputDecoration(
-                      labelText: 'Passwort',
-                      labelStyle: TextStyle(color: Colors.black),
-                      fillColor: Colors.white,
-                      filled: true,
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                    ),
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      _login(context.read<AuthProvider>());
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      elevation: 2,
-                      side: const BorderSide(color: Colors.black),
-                    ),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextButton(
-                    onPressed: _forgotPassword,
-                    child: const Text(
-                      'Passwort vergessen?',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                  LoginForm(
+                    usernameController: _usernameController,
+                    passwordController: _passwordController,
+                    onLogin: () => _login(context.read<AuthProvider>()),
+                    onForgotPassword: _forgotPassword,
                   ),
                 ],
               ),
