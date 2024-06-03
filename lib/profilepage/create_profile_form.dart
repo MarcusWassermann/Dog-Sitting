@@ -90,39 +90,11 @@ class _CreateProfileFormState extends State<CreateProfileForm> {
                 ),
                 const SizedBox(height: 16.0),
                 ProfileTextField(
-                  labelText: 'Telefonnummer',
-                  controller: widget.phoneNumberController,
-                  keyboardType: TextInputType.phone,
-                  width: 150.0,
-                  height: 40.0,
-                  optional: !widget.emergencyContact,
-                ),
-                const SizedBox(height: 16.0),
-                ProfileTextField(
                   labelText: 'E-Mail',
                   controller: widget.emailController,
                   keyboardType: TextInputType.emailAddress,
                   width: 300.0,
                   height: 40.0,
-                ),
-                const SizedBox(height: 16.0),
-                TextField(
-                  controller: additionalInfoController,
-                  maxLines: 5,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                    labelText: 'Zusätzliche Informationen',
-                    labelStyle: TextStyle(color: Colors.white),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 2.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 2.0),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 2.0),
-                    ),
-                  ),
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
@@ -144,6 +116,34 @@ class _CreateProfileFormState extends State<CreateProfileForm> {
                     style: TextStyle(
                       color:
                           widget.emergencyContact ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                ProfileTextField(
+                  labelText: 'Telefonnummer',
+                  controller: widget.phoneNumberController,
+                  keyboardType: TextInputType.phone,
+                  width: 150.0,
+                  height: 40.0,
+                  optional: !widget.emergencyContact,
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                  controller: additionalInfoController,
+                  maxLines: 5,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: const InputDecoration(
+                    labelText: 'Gebe dein Profiltext ein',
+                    labelStyle: TextStyle(color: Colors.white),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 2.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 2.0),
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 2.0),
                     ),
                   ),
                 ),

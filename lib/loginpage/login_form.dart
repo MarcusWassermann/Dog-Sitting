@@ -46,13 +46,14 @@ class _LoginFormState extends State<LoginForm> {
                 style: const TextStyle(color: Colors.black), // Set text color
                 decoration: InputDecoration(
                   labelText: 'Benutzername',
-                  labelStyle:
-                      const TextStyle(color: Colors.black), // Set label text color
+                  labelStyle: const TextStyle(
+                      color: Colors.black), // Set label text color
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   filled: true,
-                  fillColor: Colors.white, // Set background color
+                  fillColor: Colors.white
+                      .withOpacity(0.5), // Set background color with opacity
                 ),
               ),
             ),
@@ -66,13 +67,14 @@ class _LoginFormState extends State<LoginForm> {
                 style: const TextStyle(color: Colors.black), // Set text color
                 decoration: InputDecoration(
                   labelText: 'Passwort',
-                  labelStyle:
-                      const TextStyle(color: Colors.black), // Set label text color
+                  labelStyle: const TextStyle(
+                      color: Colors.black), // Set label text color
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   filled: true,
-                  fillColor: Colors.white, // Set background color
+                  fillColor: Colors.white
+                      .withOpacity(0.5), // Set background color with opacity
                   suffixIcon: IconButton(
                     icon: Icon(
                       _passwordVisible
@@ -93,7 +95,8 @@ class _LoginFormState extends State<LoginForm> {
             ElevatedButton(
               onPressed: widget.onLogin,
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.black, backgroundColor: Colors.white, // Set button text color
+                foregroundColor: Colors.black,
+                backgroundColor: Colors.white, // Set button text color
               ),
               child: const Text('Einloggen'),
             ),
@@ -104,7 +107,7 @@ class _LoginFormState extends State<LoginForm> {
                 alignment: Alignment.center,
                 child: Text(
                   'Passwort vergessen?',
-                  style: TextStyle(color: Colors.blue),
+                  style: TextStyle(color: Color.fromARGB(255, 222, 232, 240)),
                 ),
               ),
             ),
@@ -114,6 +117,3 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 }
-
-
-

@@ -1,3 +1,4 @@
+import 'package:dogs_sitting/custompage/sitter_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:dogs_sitting/custompage/custom_list_view.dart';
 import 'package:dogs_sitting/adventisement/adventisement_page.dart';
@@ -139,6 +140,21 @@ class AppWayScreen extends StatelessWidget {
                     );
                   },
                   Alignment.centerLeft,
+                ),
+                const SizedBox(height: 5),
+                _buildButton(
+                  context,
+                  'Sitter',
+                  Icons.pets, // Hunde-Icon
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProfileListView(),
+                      ),
+                    );
+                  },
+                  Alignment.centerRight,
                 ),
               ],
             ),

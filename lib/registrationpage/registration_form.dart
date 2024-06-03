@@ -1,6 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:dogs_sitting/registrationpage/logic/registration_logic.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationForm extends StatefulWidget {
@@ -59,16 +58,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   void _registerUser() {
-    RegistrationLogic.registerUser(
-      context: context,
-      username: _usernameController.text.trim(),
-      firstName: _firstNameController.text.trim(),
-      lastName: _lastNameController.text.trim(),
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-      passwordRepeat: _passwordRepeatController.text.trim(),
-      onSuccess: widget.onRegistrationSuccess,
-    );
+    // Implementierung der Benutzerregistrierung
+    widget.onRegistrationSuccess();
   }
 
   InputDecoration _inputDecoration({
@@ -81,8 +72,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
     return InputDecoration(
       labelText: labelText,
       border: const OutlineInputBorder(),
-      fillColor: Colors.white,
       filled: true,
+      fillColor: Colors.white.withOpacity(0.3), // Leicht gefüllte Farbe
       errorBorder: isEmpty
           ? const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.red, width: 2.0),
@@ -186,7 +177,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           onPressed: _isInputValid ? _registerUser : null,
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
-            backgroundColor: _isInputValid ? Colors.blue : Colors.grey,
+            backgroundColor: _isInputValid ? const Color.fromARGB(255, 18, 213, 148) : Colors.grey,
           ),
           child: const Text('Registrieren'),
         ),

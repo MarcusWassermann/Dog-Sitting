@@ -1,3 +1,4 @@
+import 'package:dogs_sitting/favoritenpage/widgets/favoriten_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dogs_sitting/provider/favoriten_provider.dart';
@@ -39,57 +40,6 @@ class FavoriteScreen extends StatelessWidget {
               return FavoriteListItem(
                 favorite: favorite,
               );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class FavoriteListItem extends StatelessWidget {
-  final UserText favorite;
-
-  const FavoriteListItem({super.key,required this.favorite});
-
-  @override
-  Widget build(BuildContext context) {
-    final FavoriteProvider favoriteProvider =
-        Provider.of<FavoriteProvider>(context, listen: false);
-
-    return Container(
-      margin: const EdgeInsets.all(8),
-      height: 100,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.black),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            width: 80,
-            height: 80,
-            color: Colors.blue,
-            child: favorite.imagePath != null
-                ? Image.asset(favorite.imagePath!, fit: BoxFit.cover)
-                : null,
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                favorite.enteredText,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 3,
-                style: const TextStyle(color: Colors.black),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete, color: Colors.black),
-            onPressed: () async {
-              favoriteProvider.removeFromFavorites(favorite);
             },
           ),
         ],

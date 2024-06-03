@@ -5,7 +5,7 @@ class UserText {
   final String? imagePath;
   final bool isApproved;
   final bool isAdvertisement;
-  final String enteredText; // Neue Eigenschaft
+  final String enteredText;
 
   UserText(
     this.text, {
@@ -14,7 +14,7 @@ class UserText {
     this.imagePath,
     this.isApproved = false,
     this.isAdvertisement = false,
-    required this.enteredText, // Aktualisierte Konstruktorparameter
+    required this.enteredText,
   });
 
   // name Getter
@@ -32,7 +32,7 @@ class UserText {
       'imagePath': imagePath,
       'isApproved': isApproved,
       'isAdvertisement': isAdvertisement,
-      'enteredText': enteredText, // Neue Eigenschaft
+      'enteredText': enteredText,
     };
   }
 
@@ -45,12 +45,12 @@ class UserText {
       imagePath: json['imagePath'],
       isApproved: json['isApproved'] ?? false,
       isAdvertisement: json['isAdvertisement'] ?? false,
-      enteredText: json['enteredText'] ?? '', // Neue Eigenschaft
+      enteredText: json['enteredText'] ?? '',
     );
   }
 
   @override
   String toString() {
-    return 'UserText{text: $text, id: $id, postcode: $postcode, imagePath: $imagePath, isApproved: $isApproved, isAdvertisement: $isAdvertisement, enteredText: $enteredText}'; // Aktualisierter toString()
+    return 'UserText{text: $text, id: $id, postcode: $postcode, imagePath: $imagePath, isApproved: $isApproved, isAdvertisement: $isAdvertisement, enteredText: $enteredText}';
   }
 }

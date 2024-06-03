@@ -1,5 +1,6 @@
 // ignore_for_file: library_prefixes
 
+import 'package:dogs_sitting/provider/profile_favoriten_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:dogs_sitting/data/abstract_database.dart';
@@ -26,6 +27,9 @@ void main() async {
         ChangeNotifierProvider(
             create: (context) => DogSittingAuthProvider.AuthProvider()),
         ChangeNotifierProvider(create: (context) => FavoriteProvider()),
+        ChangeNotifierProvider(
+            create: (context) =>
+                ProfileFavoriteProvider()), 
         ChangeNotifierProvider(create: (context) => UserTextProvider()),
         ChangeNotifierProvider(create: (context) => EmergencyContactProvider()),
         ChangeNotifierProvider(

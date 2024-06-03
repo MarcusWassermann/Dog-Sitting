@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:dogs_sitting/models/user_text.dart';
+import 'package:dogs_sitting/models/user_profile.dart';
 
-class FavoriteProvider extends ChangeNotifier {
-  List<UserText> _favorites = [];
+class ProfileFavoriteProvider extends ChangeNotifier {
+  List<UserProfile> _favorites = [];
 
-  List<UserText> get favorites => _favorites;
+  List<UserProfile> get favorites => _favorites;
 
-  FavoriteProvider() {
+  ProfileFavoriteProvider() {
     _loadFavorites();
   }
 
-  bool isFavorite(UserText item) {
+  bool isFavorite(UserProfile item) {
     return _favorites.contains(item);
   }
 
-  void addToFavorites(UserText item) {
+  void addToFavorites(UserProfile item) {
     if (!_favorites.contains(item)) {
       _favorites.add(item);
       _saveFavorites();
@@ -24,7 +24,7 @@ class FavoriteProvider extends ChangeNotifier {
     }
   }
 
-  void removeFromFavorites(UserText item) {
+  void removeFromFavorites(UserProfile item) {
     if (_favorites.contains(item)) {
       _favorites.remove(item);
       _saveFavorites();
@@ -34,11 +34,11 @@ class FavoriteProvider extends ChangeNotifier {
 
   Future<void> _loadFavorites() async {
     final prefs = await SharedPreferences.getInstance();
-    final favoritesString = prefs.getString('favorites');
+    final favoritesString = prefs.getString('profile_favorites');
 
     if (favoritesString != null) {
       _favorites = (json.decode(favoritesString) as List)
-          .map((item) => UserText.fromJson(item))
+          .map((item) => UserProfile.fromJson(item))
           .toList();
       notifyListeners();
     }
@@ -47,6 +47,6 @@ class FavoriteProvider extends ChangeNotifier {
   Future<void> _saveFavorites() async {
     final prefs = await SharedPreferences.getInstance();
     final favoriteList = _favorites.map((item) => item.toJson()).toList();
-    prefs.setString('favorites', json.encode(favoriteList));
+    prefs.setString('profile_favorites', json.encode(favoriteList));
   }
 }
