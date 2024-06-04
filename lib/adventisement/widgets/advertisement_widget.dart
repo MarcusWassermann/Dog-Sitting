@@ -106,7 +106,7 @@ Widget buildFormBody(
             height: 100,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.black),
-              color: Colors.white,
+              color: Colors.white.withOpacity(0.3), // Leichte Füllfarbe
               borderRadius: BorderRadius.circular(1.0),
             ),
             child: Row(
@@ -165,11 +165,15 @@ Widget buildFormBody(
                           controller: textEditingController,
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
+                          style: const TextStyle(
+                              color: Colors.white), // Weiße Schrift
+                          cursorColor: Colors.white, // Weißer Cursor
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Text eingeben',
-                            filled: true,
-                            fillColor: Colors.white,
+                            hintStyle: TextStyle(
+                                color: Colors.white), 
+                            filled: false,
                           ),
                         ),
                       ),

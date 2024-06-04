@@ -31,16 +31,19 @@ class ProfileRepository {
     }
   }
 
-  Future<List<UserProfile>> searchProfiles(String query) async {
+  Future<List<UserProfile>> searchProfilesByZipCode(String zipCode) async {
     try {
+      debugPrint(
+          'searchProfilesByZipCode() erhalten mit zipCode: $zipCode'); // Hinzugefügt für Debugging
+
       QuerySnapshot querySnapshot = await _firestore
           .collection('profiles')
-          .where('username', isGreaterThanOrEqualTo: query)
-          .where('username', isLessThanOrEqualTo: '$query\uf8ff')
+          .where('zipCode', isEqualTo: zipCode)
           .get();
 
       if (kDebugMode) {
-        print('searchProfiles() Query executed with query: $query');
+        print(
+            'searchProfilesByZipCode() Query executed with zipCode: $zipCode');
       }
 
       List<UserProfile> profiles = querySnapshot.docs.map((doc) {
@@ -48,13 +51,13 @@ class ProfileRepository {
       }).toList();
 
       if (kDebugMode) {
-        print('searchProfiles() Profiles loaded: $profiles');
+        print('searchProfilesByZipCode() Profiles loaded: $profiles');
       }
 
       return profiles;
     } catch (e) {
       if (kDebugMode) {
-        print('searchProfiles() Error: $e');
+        print('searchProfilesByZipCode() Error: $e');
       }
       return [];
     }

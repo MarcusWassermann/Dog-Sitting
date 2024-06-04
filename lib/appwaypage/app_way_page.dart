@@ -1,12 +1,13 @@
-import 'package:dogs_sitting/custompage/sitter_list_view.dart';
+import 'package:dogs_sitting/appwaypage/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:dogs_sitting/custompage/sitter_list_view.dart';
 import 'package:dogs_sitting/custompage/custom_list_view.dart';
 import 'package:dogs_sitting/adventisement/adventisement_page.dart';
 import 'package:dogs_sitting/emergencypage/emergency_contact_screen.dart';
 import 'package:dogs_sitting/favoritenpage/favoriten_screen.dart';
 import 'package:dogs_sitting/gallerypage/gallery_page.dart';
-import 'package:dogs_sitting/profilepage/createprofile_screen.dart';
 import 'package:dogs_sitting/settingpage/settings_page.dart';
+
 
 class AppWayScreen extends StatelessWidget {
   const AppWayScreen({super.key});
@@ -35,7 +36,7 @@ class AppWayScreen extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 5),
-                _buildButton(
+                ButtonWidgets.buildButton(
                   context,
                   'Favoriten',
                   Icons.favorite,
@@ -50,7 +51,7 @@ class AppWayScreen extends StatelessWidget {
                   Alignment.centerLeft,
                 ),
                 const SizedBox(height: 5),
-                _buildButton(
+                ButtonWidgets.buildButton(
                   context,
                   'Einstellungen',
                   Icons.settings,
@@ -65,22 +66,9 @@ class AppWayScreen extends StatelessWidget {
                   Alignment.centerRight,
                 ),
                 const SizedBox(height: 5),
-                _buildButton(
-                  context,
-                  'Profil erstellen',
-                  Icons.person_add,
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CreateProfileScreen(),
-                      ),
-                    );
-                  },
-                  Alignment.centerLeft,
-                ),
+                ButtonWidgets.buildSitterProfileButton(context),
                 const SizedBox(height: 5),
-                _buildButton(
+                ButtonWidgets.buildButton(
                   context,
                   'Notfallkontakt',
                   Icons.emergency,
@@ -97,7 +85,7 @@ class AppWayScreen extends StatelessWidget {
                   Alignment.centerRight,
                 ),
                 const SizedBox(height: 5),
-                _buildButton(
+                ButtonWidgets.buildButton(
                   context,
                   'Galerie',
                   Icons.photo_library,
@@ -112,7 +100,7 @@ class AppWayScreen extends StatelessWidget {
                   Alignment.centerLeft,
                 ),
                 const SizedBox(height: 5),
-                _buildButton(
+                ButtonWidgets.buildButton(
                   context,
                   'Anzeigen',
                   Icons.view_list,
@@ -127,7 +115,7 @@ class AppWayScreen extends StatelessWidget {
                   Alignment.centerRight,
                 ),
                 const SizedBox(height: 5),
-                _buildButton(
+                ButtonWidgets.buildButton(
                   context,
                   'Anzeigen aufgeben',
                   Icons.add_box,
@@ -142,7 +130,7 @@ class AppWayScreen extends StatelessWidget {
                   Alignment.centerLeft,
                 ),
                 const SizedBox(height: 5),
-                _buildButton(
+                ButtonWidgets.buildButton(
                   context,
                   'Sitter',
                   Icons.pets, // Hunde-Icon
@@ -160,39 +148,6 @@ class AppWayScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildButton(
-    BuildContext context,
-    String label,
-    IconData icon,
-    VoidCallback onPressed,
-    Alignment alignment,
-  ) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Align(
-        alignment: alignment,
-        child: ElevatedButton.icon(
-          onPressed: onPressed,
-          icon: Icon(icon, color: Colors.black), // Icon Farbe anpassen
-          label: Text(
-            label,
-            style: const TextStyle(color: Colors.black), // Textfarbe anpassen
-          ),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.black,
-            backgroundColor: Colors.white, // Hintergrundfarbe anpassen
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-              side: const BorderSide(color: Colors.black),
-            ),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          ),
-        ),
       ),
     );
   }

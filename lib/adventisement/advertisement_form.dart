@@ -1,16 +1,18 @@
 // ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
+import 'package:dogs_sitting/adventisement/widgets/advertisement_design.dart';
+import 'package:dogs_sitting/adventisement/widgets/advertisement_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dogs_sitting/adventisement/logic/advertisement_logic.dart';
-import 'package:dogs_sitting/adventisement/widgets/advertisement_widget.dart';
 import 'package:dogs_sitting/models/user_text.dart';
+
 
 class AdvertisementForm extends StatefulWidget {
   final TextEditingController postcodeEditingController;
 
-  const AdvertisementForm({super.key, required this.postcodeEditingController});
+  const AdvertisementForm({super.key,required this.postcodeEditingController});
 
   @override
   _AdvertisementFormState createState() => _AdvertisementFormState();
@@ -47,7 +49,8 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
       id: '',
       postcode: postcode,
       imagePath: null,
-      isApproved: false, enteredText: '',
+      isApproved: false,
+      enteredText: '',
     );
   }
 
@@ -105,61 +108,12 @@ class _AdvertisementFormState extends State<AdvertisementForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: null,
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/1906154.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Positioned(
-            top: MediaQuery.of(context).padding.top,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  buildFormBody(_image, _textEditingController, _uploadImage),
-                  const SizedBox(height: 20.0),
-                  SizedBox(
-                    width: 150, // Angepasste Breite für 5 Zeichen
-                    child: TextField(
-                      controller: widget.postcodeEditingController,
-                      maxLength: 5, // Maximal 5 Zeichen
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Postcode eingeben',
-                        filled: true,
-                        fillColor: Colors.white,
-                        counterText:
-                            "", // Verhindert die Anzeige der Zähleranzeige
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 320.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      _saveData();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green, // Grüne Farbe
-                    ),
-                    child: const Text('Daten speichern'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+    return AdvertisementDesign(
+      image: _image,
+      textEditingController: _textEditingController,
+      postcodeEditingController: widget.postcodeEditingController,
+      uploadImage: _uploadImage,
+      saveData: _saveData,
     );
   }
 }
