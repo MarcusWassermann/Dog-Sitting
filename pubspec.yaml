@@ -34,20 +34,22 @@ flutter:
   uses-material-design: true
   assets:
 
-    - assets/1423213-3715587.jpg
-    - assets/1223825-2326936.jpg
-    - assets/1147812.jpg
-    - assets/3397939.jpg
-    - assets/358238.jpg
-    - assets/19296629.jpg
-    - assets/20330741.jpg
-    - assets/16868426.jpg
-    - assets/1906154.jpg
-    - assets/19296629.jpg
-    - assets/19225613.jpg
-    - assets/14475041.jpg
-    - assets/18940716.jpg
-    - assets/3752118.jpg
-    - assets/3080322.jpg
-    - assets/14116837.jpg
-    - assets/20067618.jpg
+    - assets/1.png
+    - assets/2.png
+    - assets/3.png
+    - assets/4.png
+    - assets/5.png
+    - assets/6.png
+    - assets/7.png
+    - assets/8.png
+    - assets/9.png
+    - assets/10.png
+    - assets/11.png
+    - assets/12.png
+    - assets/13.png
+    - assets/14.png
+    - assets/15.png
+    - assets/16.png
+    - assets/17.png
+    - assets/18.png
+    - assets/123.png

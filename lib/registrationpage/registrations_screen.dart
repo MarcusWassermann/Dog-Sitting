@@ -1,6 +1,7 @@
-import 'package:dogs_sitting/registrationpage/registration_form.dart';
-import 'package:flutter/material.dart';
 import 'package:dogs_sitting/appwaypage/app_way_page.dart';
+import 'package:flutter/material.dart';
+import 'registration_form.dart';
+
 
 class RegistrationScreen extends StatelessWidget {
   const RegistrationScreen({super.key});
@@ -8,12 +9,11 @@ class RegistrationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar:
-          true, // Hintergrundbild wird hinter der AppBar platziert
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent, // Transparente AppBar
-        elevation: 0, // Kein Schatten
-        title: const Text('Registrieren'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text(''),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -25,7 +25,7 @@ class RegistrationScreen extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            'assets/3752118.jpg', // Pfad zum Hintergrundbild anpassen
+            'assets/4.png',
             fit: BoxFit.cover,
           ),
           Padding(

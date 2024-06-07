@@ -1,25 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class EmergencyContactRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String> getEmergencyContactPhoneNumber(String documentId) async {
+  Future<List<String>> getEmergencyContactPhoneNumbers(
+      String postalCodePrefix) async {
     try {
-      final DocumentSnapshot snapshot =
-          await _firestore.collection('profiles').doc(documentId).get();
+      final QuerySnapshot querySnapshot = await _firestore
+          .collection('profiles')
+          .where('postalCode', isGreaterThanOrEqualTo: postalCodePrefix)
+          .where('postalCode', isLessThan: '$postalCodePrefix\uf8ff')
+          .get();
 
-      if (snapshot.exists) {
+      final List<String> phoneNumbers = [];
+
+      for (var snapshot in querySnapshot.docs) {
         final Map<String, dynamic>? data =
             snapshot.data() as Map<String, dynamic>?;
         final phoneNumber = data?['phoneNumber'] as String?;
-        return phoneNumber ??
-            ''; // Wenn phoneNumber nicht vorhanden ist, gib einen leeren String zurück
-      } else {
-        return ''; // Wenn das Dokument nicht existiert, gib einen leeren String zurück
+        if (phoneNumber != null) {
+          phoneNumbers.add(phoneNumber);
+        }
       }
+
+      return phoneNumbers;
     } catch (error) {
-      return ''; // Im Fehlerfall gib ebenfalls einen leeren String zurück
+      return []; // Rückgabe einer leeren Liste im Fehlerfall
     }
   }
 }

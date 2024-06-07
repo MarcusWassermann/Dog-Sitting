@@ -92,96 +92,103 @@ class _RegistrationFormState extends State<RegistrationForm> {
               onPressed: onVisibilityToggle,
             )
           : null,
+      contentPadding: const EdgeInsets.symmetric(
+          vertical: 12.0,
+          horizontal: 12.0), // Hier die Höhe und Breite der Textfelder anpassen
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        const SizedBox(height: 24.0),
-        TextField(
-          controller: _usernameController,
-          decoration: _inputDecoration(
-            labelText: 'Benutzername',
-            isEmpty: _usernameController.text.isEmpty,
-            isPassword: false,
-            onVisibilityToggle: () {},
+    return Container(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextField(
+            controller: _usernameController,
+            decoration: _inputDecoration(
+              labelText: 'Benutzername',
+              isEmpty: _usernameController.text.isEmpty,
+              isPassword: false,
+              onVisibilityToggle: () {},
+            ),
           ),
-        ),
-        const SizedBox(height: 24.0),
-        TextField(
-          controller: _firstNameController,
-          decoration: _inputDecoration(
-            labelText: 'Vorname',
-            isEmpty: _firstNameController.text.isEmpty,
-            isPassword: false,
-            onVisibilityToggle: () {},
+          const SizedBox(height: 8.0),
+          TextField(
+            controller: _firstNameController,
+            decoration: _inputDecoration(
+              labelText: 'Vorname',
+              isEmpty: _firstNameController.text.isEmpty,
+              isPassword: false,
+              onVisibilityToggle: () {},
+            ),
           ),
-        ),
-        const SizedBox(height: 24.0),
-        TextField(
-          controller: _lastNameController,
-          decoration: _inputDecoration(
-            labelText: 'Nachname',
-            isEmpty: _lastNameController.text.isEmpty,
-            isPassword: false,
-            onVisibilityToggle: () {},
+          const SizedBox(height: 8.0),
+          TextField(
+            controller: _lastNameController,
+            decoration: _inputDecoration(
+              labelText: 'Nachname',
+              isEmpty: _lastNameController.text.isEmpty,
+              isPassword: false,
+              onVisibilityToggle: () {},
+            ),
           ),
-        ),
-        const SizedBox(height: 24.0),
-        TextField(
-          controller: _emailController,
-          decoration: _inputDecoration(
-            labelText: 'E-Mail',
-            isEmpty: _emailController.text.isEmpty,
-            isPassword: false,
-            onVisibilityToggle: () {},
+          const SizedBox(height: 8.0),
+          TextField(
+            controller: _emailController,
+            decoration: _inputDecoration(
+              labelText: 'E-Mail',
+              isEmpty: _emailController.text.isEmpty,
+              isPassword: false,
+              onVisibilityToggle: () {},
+            ),
           ),
-        ),
-        const SizedBox(height: 24.0),
-        TextField(
-          controller: _passwordController,
-          obscureText: !_passwordVisible,
-          decoration: _inputDecoration(
-            labelText: 'Passwort',
-            isEmpty: _passwordController.text.isEmpty,
-            isPassword: true,
-            onVisibilityToggle: () {
-              setState(() {
-                _passwordVisible = !_passwordVisible;
-              });
-            },
-            isPasswordVisible: _passwordVisible,
+          const SizedBox(height: 8.0),
+          TextField(
+            controller: _passwordController,
+            obscureText: !_passwordVisible,
+            decoration: _inputDecoration(
+              labelText: 'Passwort',
+              isEmpty: _passwordController.text.isEmpty,
+              isPassword: true,
+              onVisibilityToggle: () {
+                setState(() {
+                  _passwordVisible = !_passwordVisible;
+                });
+              },
+              isPasswordVisible: _passwordVisible,
+            ),
           ),
-        ),
-        const SizedBox(height: 24.0),
-        TextField(
-          controller: _passwordRepeatController,
-          obscureText: !_passwordRepeatVisible,
-          decoration: _inputDecoration(
-            labelText: 'Passwort wiederholen',
-            isEmpty: _passwordRepeatController.text.isEmpty,
-            isPassword: true,
-            onVisibilityToggle: () {
-              setState(() {
-                _passwordRepeatVisible = !_passwordRepeatVisible;
-              });
-            },
-            isPasswordVisible: _passwordRepeatVisible,
+          const SizedBox(height: 8.0),
+          TextField(
+            controller: _passwordRepeatController,
+            obscureText: !_passwordRepeatVisible,
+            decoration: _inputDecoration(
+              labelText: 'Passwort wiederholen',
+              isEmpty: _passwordRepeatController.text.isEmpty,
+              isPassword: true,
+              onVisibilityToggle: () {
+                setState(() {
+                  _passwordRepeatVisible = !_passwordRepeatVisible;
+                });
+              },
+              isPasswordVisible: _passwordRepeatVisible,
+            ),
           ),
-        ),
-        const SizedBox(height: 24.0),
-        ElevatedButton(
-          onPressed: _isInputValid ? _registerUser : null,
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: _isInputValid ? const Color.fromARGB(255, 18, 213, 148) : Colors.grey,
+          const SizedBox(height: 16.0),
+          ElevatedButton(
+            onPressed: _isInputValid ? _registerUser : null,
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: _isInputValid
+                  ? const Color.fromARGB(255, 18, 213, 148)
+                  : Colors.grey,
+            ),
+            child: const Text('Registrieren'),
           ),
-          child: const Text('Registrieren'),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

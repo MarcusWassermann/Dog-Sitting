@@ -67,7 +67,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         children: [
           // Hintergrundbild über die gesamte Seite
           Image.asset(
-            'assets/18940716.jpg',
+            'assets/3.png',
             fit: BoxFit.cover,
           ),
           // Inhalte über das Hintergrundbild

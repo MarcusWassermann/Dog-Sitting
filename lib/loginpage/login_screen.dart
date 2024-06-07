@@ -1,4 +1,4 @@
-// login_screen.dart
+
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:dogs_sitting/provider/auth_ptovider.dart';
@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:dogs_sitting/appwaypage/app_way_page.dart';
 import 'login_form.dart';
 
+// Definition der LoginScreen-Klasse
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -14,21 +15,24 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
+// Definition des LoginScreenState
 class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _usernameController;
   late final TextEditingController _passwordController;
 
+  // Initialisierung der Textcontroller und Überprüfung des Anmeldezustands
   @override
   void initState() {
     super.initState();
     _usernameController = TextEditingController();
     _passwordController = TextEditingController();
-    // Überprüfe den Anmeldezustand bei der Initialisierung
+    // Überprüfen des Anmeldezustands bei der Initialisierung
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AuthProvider>().checkLoginState();
     });
   }
 
+  // Freigabe der Textcontroller
   @override
   void dispose() {
     _usernameController.dispose();
@@ -36,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  // Methode zum Ausführen des Anmeldevorgangs
   void _login(AuthProvider authProvider) async {
     final String username = _usernameController.text;
     final String password = _passwordController.text;
@@ -73,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // Methode für 'Passwort vergessen'-Aktion
   void _forgotPassword() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -81,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  // Erstellen des UIs für den Login-Bildschirm
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,13 +111,12 @@ class _LoginScreenState extends State<LoginScreen> {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            'assets/3397939.jpg',
+            'assets/13.png',
             fit: BoxFit.cover,
           ),
           Center(
             child: SingleChildScrollView(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 40, vertical: 500),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

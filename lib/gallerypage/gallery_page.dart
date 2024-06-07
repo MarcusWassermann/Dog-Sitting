@@ -73,7 +73,7 @@ class _GalleryPageState extends State<GalleryPage> {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/3080322.jpg',
+              'assets/15.png',
               fit: BoxFit.cover,
             ),
           ),

@@ -27,7 +27,7 @@ class AdvertisementDesign extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/1906154.jpg'),
+                image: AssetImage('assets/1.png'),
                 fit: BoxFit.cover,
               ),
             ),

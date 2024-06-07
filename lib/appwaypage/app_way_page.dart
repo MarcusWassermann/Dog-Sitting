@@ -8,25 +8,29 @@ import 'package:dogs_sitting/favoritenpage/favoriten_screen.dart';
 import 'package:dogs_sitting/gallerypage/gallery_page.dart';
 import 'package:dogs_sitting/settingpage/settings_page.dart';
 
-
 class AppWayScreen extends StatelessWidget {
   const AppWayScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true, // Ensure the body extends behind the AppBar
+      appBar: AppBar(
+        title: const Text('App Weg'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: Stack(
         fit: StackFit.expand,
         children: [
           Image.asset(
-            'assets/358238.jpg',
+            'assets/8.png',
             fit: BoxFit.cover,
           ),
           Padding(
             padding: const EdgeInsets.only(
-                top: kToolbarHeight + 40.0, left: 20.0, right: 20.0),
+                top: kToolbarHeight + 20.0, left: 20.0, right: 20.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 IconButton(
@@ -133,7 +137,7 @@ class AppWayScreen extends StatelessWidget {
                 ButtonWidgets.buildButton(
                   context,
                   'Sitter',
-                  Icons.pets, // Hunde-Icon
+                  Icons.pets,
                   () {
                     Navigator.push(
                       context,

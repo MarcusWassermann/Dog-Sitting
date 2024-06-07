@@ -21,11 +21,17 @@ class EmergencyContactScreen extends StatefulWidget {
 class _EmergencyContactScreenState extends State<EmergencyContactScreen> {
   bool _emergencyTriggered = false;
   String _emergencyMessage = '';
+  String _phoneNumber1 = '';
+  final String _phoneNumber2 = '';
+  final String _phoneNumber3 = '';
+  final TextEditingController _postcodeController = TextEditingController();
+  final TextEditingController _phoneController1 = TextEditingController();
+  final TextEditingController _phoneController2 = TextEditingController();
+  final TextEditingController _phoneController3 = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _getEmergencyContact();
   }
 
   Future<void> _getEmergencyContact() async {
@@ -33,39 +39,30 @@ class _EmergencyContactScreenState extends State<EmergencyContactScreen> {
       final emergencyContactProvider =
           Provider.of<EmergencyContactProvider>(context, listen: false);
       await emergencyContactProvider.fetchEmergencyContact(widget.documentId);
-      // Entfernen der Debug-Ausgabe
-      // if (kDebugMode) {
-      //   print('Emergency contact fetched in initState');
-      // }
+      setState(() {
+        _phoneNumber1 = emergencyContactProvider.phoneNumber;
+        _phoneController1.text = _phoneNumber1;
+      });
     } catch (error) {
-      // Entfernen der Fehlerausgabe
-      // if (kDebugMode) {
-      //   print('Error fetching emergency contact: $error');
-      // }
+      // Fehlerbehandlung
     }
   }
 
   Future<void> _triggerEmergency(BuildContext context) async {
-    final emergencyContactProvider =
-        Provider.of<EmergencyContactProvider>(context, listen: false);
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    final message = emergencyContactProvider.phoneNumber.isNotEmpty
-        ? 'Notfall ausgelöst an ${emergencyContactProvider.phoneNumber}'
-        : 'Notfallkontakt nicht gefunden';
+    final message = _phoneNumber1.isNotEmpty
+        ? 'Notfall ausgelöst an $_phoneNumber1, $_phoneNumber2, $_phoneNumber3'
+        : '';
 
     setState(() {
       _emergencyTriggered = true;
       _emergencyMessage = message;
     });
 
-    // Entfernen der Debug-Ausgabe
-    // if (kDebugMode) {
-    //   print('Trigger emergency message: $message');
-    // }
-
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
+    await _getEmergencyContact();
   }
 
   @override
@@ -87,46 +84,98 @@ class _EmergencyContactScreenState extends State<EmergencyContactScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
+                padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border.all(color: Colors.red, width: 5),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.warning,
-                        size: 100,
-                        color: Colors.red,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.warning,
+                      size: 100,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Notfallkontakt',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: 80,
+                      child: TextField(
+                        controller: _postcodeController,
+                        decoration: const InputDecoration(
+                          labelText: 'PLZ',
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.number,
+                        maxLength: 2,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      height: 50,
+                      child: TextField(
+                        controller: _phoneController1,
+                        decoration: const InputDecoration(
+                          labelText: 'Telefonnummer 1',
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.phone,
+                        maxLength: 10,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 50,
+                      child: TextField(
+                        controller: _phoneController2,
+                        decoration: const InputDecoration(
+                          labelText: 'Telefonnummer 2',
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.phone,
+                        maxLength: 10,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 50,
+                      child: TextField(
+                        controller: _phoneController3,
+                        decoration: const InputDecoration(
+                          labelText: 'Telefonnummer 3',
+                          border: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.phone,
+                        maxLength: 10,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        _triggerEmergency(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                      ),
+                      child: const Text('Notfall auslösen'),
+                    ),
+                    if (_emergencyTriggered) ...[
                       const SizedBox(height: 20),
-                      const Text(
-                        'Notfallkontakt',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Text(
+                        _emergencyMessage,
+                        style: const TextStyle(fontSize: 18),
                       ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          _triggerEmergency(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                        ),
-                        child: const Text('Notfall auslösen'),
-                      ),
-                      if (_emergencyTriggered) ...[
-                        const SizedBox(height: 20),
-                        Text(
-                          _emergencyMessage,
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ],
                     ],
-                  ),
+                  ],
                 ),
               ),
             ],

@@ -1,3 +1,4 @@
+
 import 'package:dogs_sitting/provider/auth_ptovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +30,7 @@ class SettingsPage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/1147812.jpg'),
+            image: AssetImage('assets/14.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -64,7 +65,8 @@ class SettingsPage extends StatelessWidget {
                   _showDeleteConfirmation(
                       context, "Als Notfallkontakt entfernen", () {
                     Provider.of<AuthProvider>(context, listen: false)
-                        .removeAsEmergencyContact();
+                        .removeAsEmergencyContact(
+                            'userId'); // 'userId' durch den tatsächlichen Benutzer-ID-Wert ersetzen
                     Navigator.pop(context);
                   });
                 },
@@ -116,7 +118,8 @@ class SettingsPage extends StatelessWidget {
 
   void _deleteAd(BuildContext context) {
     _showDeleteConfirmation(context, "Anzeige löschen", () {
-      Provider.of<AuthProvider>(context, listen: false).deleteAd();
+      Provider.of<AuthProvider>(context, listen: false).deleteAd(
+          'adId'); // 'adId' durch den tatsächlichen Anzeigen-ID-Wert ersetzen
       Navigator.pop(context);
     });
   }

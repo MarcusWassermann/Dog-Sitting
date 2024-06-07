@@ -42,16 +42,12 @@ class _ProfileListViewState extends State<ProfileListView> {
   }
 
   void search(String value) async {
-    debugPrint('Suchwert: $value'); // Hinzugefügt für Debugging
     if (value.isNotEmpty) {
       try {
         List<UserProfile> fetchedProfiles =
             await ProfileRepository().searchProfilesByZipCode(value);
-        debugPrint(
-            'Gefundene Profile: $fetchedProfiles'); // Hinzugefügt für Debugging
         setState(() {
           profiles = fetchedProfiles;
-          _searchController.clear(); // Suchfeld leeren
         });
       } catch (e) {
         debugPrint('Fehler beim Suchen der Profile: $e');
@@ -83,7 +79,10 @@ class _ProfileListViewState extends State<ProfileListView> {
               prefixIcon: const Icon(Icons.search, color: Colors.black),
               suffixIcon: _searchController.text.isNotEmpty
                   ? IconButton(
-                      icon: const Icon(Icons.clear, color: Colors.black),
+                      icon: const Icon(
+                        Icons.clear,
+                        color: Colors.black,
+                      ),
                       onPressed: () {
                         setState(() {
                           _searchController.clear();
@@ -94,14 +93,22 @@ class _ProfileListViewState extends State<ProfileListView> {
                   : null,
             ),
             style: const TextStyle(color: Colors.black),
-            onSubmitted: (value) {
-              debugPrint('Eingereicht: $value'); // Hinzugefügt für Debugging
-              search(value);
-            }, // Verwenden Sie onSubmitted anstelle von onChanged
+            onChanged: search,
           ),
         ),
       ),
-      body: ProfileList(profiles: profiles),
+      body: Column(
+        children: [
+          const Divider(
+            color: Colors.grey,
+            thickness: 1.0,
+            height: 0.0,
+          ),
+          Expanded(
+            child: ProfileList(profiles: profiles),
+          ),
+        ],
+      ),
     );
   }
 }

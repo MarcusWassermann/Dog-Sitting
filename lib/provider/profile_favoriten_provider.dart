@@ -1,52 +1,58 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'package:dogs_sitting/models/user_profile.dart';
+import 'dart:convert';
 
 class ProfileFavoriteProvider extends ChangeNotifier {
-  List<UserProfile> _favorites = [];
-
-  List<UserProfile> get favorites => _favorites;
+  final List<UserProfile> _favorites = [];
+  late SharedPreferences _prefs;
 
   ProfileFavoriteProvider() {
     _loadFavorites();
   }
 
-  bool isFavorite(UserProfile item) {
-    return _favorites.contains(item);
-  }
-
-  void addToFavorites(UserProfile item) {
-    if (!_favorites.contains(item)) {
-      _favorites.add(item);
-      _saveFavorites();
-      notifyListeners();
-    }
-  }
-
-  void removeFromFavorites(UserProfile item) {
-    if (_favorites.contains(item)) {
-      _favorites.remove(item);
-      _saveFavorites();
-      notifyListeners();
-    }
+  Future<void> _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
   }
 
   Future<void> _loadFavorites() async {
-    final prefs = await SharedPreferences.getInstance();
-    final favoritesString = prefs.getString('profile_favorites');
-
-    if (favoritesString != null) {
-      _favorites = (json.decode(favoritesString) as List)
-          .map((item) => UserProfile.fromJson(item))
-          .toList();
+    await _initPrefs();
+    final favoritesData = _prefs.getString('favorites');
+    if (kDebugMode) {
+      print('Favorites Data: $favoritesData');
+    } // Debugging-Ausgabe hinzugefügt
+    if (favoritesData != null) {
+      final List<dynamic> decodedData = jsonDecode(favoritesData);
+      _favorites.addAll(decodedData.map((e) => UserProfile.fromJson(e)));
+      if (kDebugMode) {
+        print('Loaded favorites: $_favorites');
+      } // Debugging-Ausgabe hinzugefügt
       notifyListeners();
     }
   }
 
+  List<UserProfile> get favorites => _favorites;
+
+  bool isFavorite(UserProfile profile) {
+    return _favorites.contains(profile);
+  }
+
+  Future<void> addToFavorites(UserProfile profile) async {
+    await _initPrefs();
+    _favorites.add(profile);
+    _saveFavorites();
+    notifyListeners();
+  }
+
+  Future<void> removeFromFavorites(UserProfile profile) async {
+    await _initPrefs();
+    _favorites.remove(profile);
+    _saveFavorites();
+    notifyListeners();
+  }
+
   Future<void> _saveFavorites() async {
-    final prefs = await SharedPreferences.getInstance();
-    final favoriteList = _favorites.map((item) => item.toJson()).toList();
-    prefs.setString('profile_favorites', json.encode(favoriteList));
+    final encodedData = jsonEncode(_favorites);
+    await _prefs.setString('favorites', encodedData);
   }
 }

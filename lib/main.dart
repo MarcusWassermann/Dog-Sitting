@@ -34,7 +34,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => EmergencyContactProvider()),
         ChangeNotifierProvider(
             create: (context) =>
-                UserProvider()), // Hinzugefügter Benutzer-Provider
+                UserProvider()), 
       ],
       child: const MyApp(),
     ),

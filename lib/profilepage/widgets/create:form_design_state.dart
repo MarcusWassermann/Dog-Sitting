@@ -1,11 +1,11 @@
-// ignore_for_file: use_build_context_synchronously
+
+// ignore_for_file: unused_element, use_build_context_synchronously
 
 import 'package:dogs_sitting/profilepage/widgets/profile_avatar.dart';
 import 'package:dogs_sitting/profilepage/widgets/profile_text_field.dart';
 import 'package:flutter/material.dart';
 import 'create_form_design.dart';
 
-// ignore: unused_element
 class _CreateProfileDesignState extends State<CreateProfileDesign> {
   final TextEditingController additionalInfoController =
       TextEditingController();
@@ -36,6 +36,7 @@ class _CreateProfileDesignState extends State<CreateProfileDesign> {
                   controller: widget.usernameController,
                   width: 200.0,
                   height: 40.0,
+                  fillColor: Colors.grey.withOpacity(0.2),
                 ),
                 const SizedBox(height: 16.0),
                 ProfileTextField(
@@ -43,6 +44,7 @@ class _CreateProfileDesignState extends State<CreateProfileDesign> {
                   controller: widget.firstNameController,
                   width: 200.0,
                   height: 40.0,
+                  fillColor: Colors.grey.withOpacity(0.2),
                 ),
                 const SizedBox(height: 16.0),
                 ProfileTextField(
@@ -50,6 +52,7 @@ class _CreateProfileDesignState extends State<CreateProfileDesign> {
                   controller: widget.lastNameController,
                   width: 200.0,
                   height: 40.0,
+                  fillColor: Colors.grey.withOpacity(0.2),
                 ),
                 const SizedBox(height: 16.0),
                 ProfileTextField(
@@ -58,6 +61,7 @@ class _CreateProfileDesignState extends State<CreateProfileDesign> {
                   keyboardType: TextInputType.number,
                   width: 100.0,
                   height: 40.0,
+                  fillColor: Colors.grey.withOpacity(0.2),
                 ),
                 const SizedBox(height: 16.0),
                 ProfileTextField(
@@ -66,6 +70,7 @@ class _CreateProfileDesignState extends State<CreateProfileDesign> {
                   keyboardType: TextInputType.emailAddress,
                   width: 300.0,
                   height: 40.0,
+                  fillColor: Colors.grey.withOpacity(0.2),
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
@@ -98,7 +103,7 @@ class _CreateProfileDesignState extends State<CreateProfileDesign> {
                   width: 150.0,
                   height: 40.0,
                   optional: !widget.emergencyContact,
-                  fillColor: Colors.grey[200], // Füllfarbe hinzugefügt
+                  fillColor: Colors.grey.withOpacity(0.2),
                 ),
                 const SizedBox(height: 16.0),
                 TextField(
@@ -109,19 +114,16 @@ class _CreateProfileDesignState extends State<CreateProfileDesign> {
                     labelText: 'Gebe dein Profiltext ein',
                     labelStyle: const TextStyle(color: Colors.white),
                     enabledBorder: const OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.white, width: 2.0),
+                      borderSide: BorderSide(color: Colors.white, width: 2.0),
                     ),
                     focusedBorder: const OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.white, width: 2.0),
+                      borderSide: BorderSide(color: Colors.white, width: 2.0),
                     ),
                     border: const OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.white, width: 2.0),
+                      borderSide: BorderSide(color: Colors.white, width: 2.0),
                     ),
-                    fillColor: Colors.grey[200], // Füllfarbe hinzugefügt
-                    filled: true, // Hinzugefügt, um die Füllfarbe zu aktivieren
+                    fillColor: Colors.grey.withOpacity(0.2),
+                    filled: true,
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -139,23 +141,30 @@ class _CreateProfileDesignState extends State<CreateProfileDesign> {
                           'emergencyContact': widget.emergencyContact,
                           'additionalInfo': additionalInfoController.text,
                         });
-                        _resetFields();
-                        widget.onSave();
+
+                        if (mounted) {
+                          _resetFields();
+                          widget.onSave();
+                        }
                       } catch (e) {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text('Fehler beim Speichern des Profils: $e'),
+                            ),
+                          );
+                        }
+                      }
+                    } else {
+                      if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content:
-                                Text('Fehler beim Speichern des Profils: $e'),
+                          const SnackBar(
+                            content: Text(
+                                'Bitte füllen Sie alle erforderlichen Felder aus.'),
                           ),
                         );
                       }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                              'Bitte füllen Sie alle erforderlichen Felder aus.'),
-                        ),
-                      );
                     }
                   },
                   style: ElevatedButton.styleFrom(

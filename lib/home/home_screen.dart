@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
       child: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/1423213-3715587.jpg'),
+            image: AssetImage('assets/12.png'),
             fit: BoxFit.cover,
             alignment: Alignment(
               0.3,

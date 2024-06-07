@@ -13,7 +13,7 @@ class MyScreen extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/1223825-2326936.jpg'),
+                image: AssetImage('assets/16.png'),
                 fit: BoxFit.cover,
               ),
             ),
