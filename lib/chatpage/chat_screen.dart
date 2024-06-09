@@ -1,18 +1,10 @@
-// chat_screen.dart
-
-// ignore_for_file: library_private_types_in_public_api
-
+import 'package:flutter/material.dart';
 import 'package:dogs_sitting/chatpage/repository/chat_repository.dart';
 import 'package:dogs_sitting/chatpage/widgets/message_input.dart';
 import 'package:dogs_sitting/chatpage/widgets/message_list.dart';
-import 'package:dogs_sitting/models/user_text.dart';
-import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
-  final String chatPartnerName;
-
-  const ChatScreen(
-      {super.key, required this.chatPartnerName, required UserText userText});
+  const ChatScreen({Key? key});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -21,13 +13,18 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   late final TextEditingController _messageController;
   late final ChatRepository _chatRepository;
-  bool _isBlocked = false;
 
   @override
   void initState() {
     super.initState();
     _messageController = TextEditingController();
     _chatRepository = ChatRepository();
+    _loadMessages();
+  }
+
+  Future<void> _loadMessages() async {
+    await _chatRepository.loadMessages();
+    setState(() {});
   }
 
   @override
@@ -45,94 +42,109 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void _toggleBlockUser() {
-    setState(() {
-      _isBlocked = !_isBlocked;
-    });
+  void _deleteMessage(int index) async {
+    await _chatRepository.deleteMessage(index);
+    setState(() {});
+  }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(_isBlocked ? 'Benutzer blockiert' : 'Benutzer entsperrt'),
-      ),
+  void _restoreMessage(int index, String message) async {
+    await _chatRepository.restoreMessage(index, message);
+    setState(() {});
+  }
+
+  void _clearChat() async {
+    await _chatRepository.clearMessages();
+    setState(() {});
+  }
+
+  void _blockUser(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Benutzer blockieren'),
+          content:
+              const Text('Möchtest du diesen Benutzer wirklich blockieren?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Abbrechen'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Hier kannst du die Logik implementieren, um den Benutzer zu blockieren
+                Navigator.pop(context);
+              },
+              child: const Text('Blockieren'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteChat(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Chat löschen'),
+          content: const Text('Möchtest du diesen Chat wirklich löschen?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Abbrechen'),
+            ),
+            TextButton(
+              onPressed: () {
+                _clearChat();
+                Navigator.pop(context);
+              },
+              child: const Text('Löschen'),
+            ),
+          ],
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(widget.chatPartnerName),
+        title: Center(child: const Text('Chat')), // Titel zentriert
+        backgroundColor: Colors.grey[200], // Leichtes Grau als Hintergrundfarbe
         actions: [
           IconButton(
-            icon: Icon(_isBlocked ? Icons.block : Icons.block_flipped),
-            onPressed: _toggleBlockUser,
+            onPressed: () => _deleteChat(context),
+            icon: const Icon(Icons.delete),
+            color: Colors.black, // Schwarze Farbe für das Icon
+          ),
+          IconButton(
+            onPressed: () => _blockUser(context),
+            icon: const Icon(Icons.block),
+            color: Colors.black, // Schwarze Farbe für das Icon
           ),
         ],
-        backgroundColor: Colors.transparent,
-        elevation: 0,
       ),
-      body: Stack(
-        children: [
-          // Hintergrundbild über die gesamte Seite
-          Positioned.fill(
-            child: Image.asset(
-              'assets/19296629.jpg',
-              fit: BoxFit.cover,
-            ),
-          ),
-          // Inhalte über das Hintergrundbild
-          Column(
-            children: [
-              SizedBox(
-                  height: AppBar()
-                      .preferredSize
-                      .height), // Platzhalter für die Höhe der AppBar
-              Expanded(
-                child: MessageList(
-                  messages: _chatRepository.messages,
-                  onDismissed: (index) {
-                    setState(() {
-                      _chatRepository.deleteMessage(index);
-                    });
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('Nachricht gelöscht'),
-                        action: SnackBarAction(
-                          label: 'Rückgängig',
-                          onPressed: () {
-                            setState(() {
-                              _chatRepository.restoreMessage(
-                                  index, _chatRepository.deletedMessages.last);
-                            });
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                  onRestore: (index, message) {
-                    setState(() {
-                      _chatRepository.restoreMessage(index, message);
-                    });
-                  },
-                ),
+      backgroundColor: Colors.grey[200], // Leichtes Grau als Hintergrundfarbe
+      body: Container(
+        color: Colors.grey[200], // Leichtes Grau als Hintergrundfarbe
+        child: Column(
+          children: [
+            Expanded(
+              child: MessageList(
+                messages: _chatRepository.messages,
+                onDismissed: _deleteMessage,
+                onRestore: _restoreMessage,
               ),
-              _isBlocked
-                  ? const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'Sie haben diesen Benutzer blockiert. Sie können keine Nachrichten senden oder empfangen.',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    )
-                  : MessageInput(
-                      messageController: _messageController,
-                      onSendMessage: _sendMessage,
-                    ),
-            ],
-          ),
-        ],
+            ),
+            MessageInput(
+              messageController: _messageController,
+              onSendMessage: _sendMessage,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_string_interpolations
-
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,23 +8,40 @@ class AuthProvider extends ChangeNotifier {
 
   bool isLoggedIn = false;
 
+  AuthProvider() {
+    checkLoginState(); // Überprüfung des Anmeldezustands beim Initialisieren
+  }
+
   // Methode zur Anmeldung mit Benutzername und Passwort
-  void signInWithUsernameAndPassword(String username, String password) async {
+  Future<void> signInWithUsernameAndPassword(
+      String username, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(
-          email: username, password: password);
-      isLoggedIn = true;
-      await keepLoggedIn(); // Hier wird die Funktion keepLoggedIn aufgerufen
-      notifyListeners();
+      // Hier wird der Benutzername in eine E-Mail-Adresse übersetzt
+      final userQuery = await _firestore
+          .collection('users')
+          .where('username', isEqualTo: username)
+          .limit(1)
+          .get();
+      if (userQuery.docs.isNotEmpty) {
+        final email = userQuery.docs.first['email'];
+        await _auth.signInWithEmailAndPassword(
+            email: email, password: password);
+        isLoggedIn = true;
+        await keepLoggedIn(); // Hier wird die Funktion keepLoggedIn aufgerufen
+        notifyListeners();
+      } else {
+        throw Exception('Benutzername nicht gefunden');
+      }
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        print('Login error: $e');
       }
+      // Fehlerbehandlung, um dem Benutzer Feedback zu geben
     }
   }
 
   // Methode zur Anmeldung mit E-Mail und Passwort
-  void signInWithEmailAndPassword(String email, String password) async {
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       isLoggedIn = true;
@@ -34,21 +49,23 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        print('Login error: $e');
       }
+      // Fehlerbehandlung, um dem Benutzer Feedback zu geben
     }
   }
 
   // Methode zur Abmeldung
-  void signOut() async {
+  Future<void> signOut() async {
     try {
       await _auth.signOut();
       isLoggedIn = false;
       notifyListeners();
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        print('Logout error: $e');
       }
+      // Fehlerbehandlung, um dem Benutzer Feedback zu geben
     }
   }
 
@@ -67,8 +84,9 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        print('Delete profile error: $e');
       }
+      // Fehlerbehandlung, um dem Benutzer Feedback zu geben
     }
   }
 
@@ -78,8 +96,9 @@ class AuthProvider extends ChangeNotifier {
       await _firestore.collection('ads').doc(adId).delete();
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        print('Delete ad error: $e');
       }
+      // Fehlerbehandlung, um dem Benutzer Feedback zu geben
     }
   }
 
@@ -89,29 +108,10 @@ class AuthProvider extends ChangeNotifier {
       await _firestore.collection('emergency_contacts').doc(userId).delete();
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        print('Remove emergency contact error: $e');
       }
+      // Fehlerbehandlung, um dem Benutzer Feedback zu geben
     }
-  }
-
-  // Methode zur Anmeldung
-  void signIn(String email, String password) async {
-    try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-      isLoggedIn = true;
-      await keepLoggedIn(); // Hier wird die Funktion keepLoggedIn aufgerufen
-      notifyListeners();
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-    }
-  }
-
-  // Methode zur Markierung des Benutzers als eingeloggt
-  void login() {
-    isLoggedIn = true;
-    notifyListeners();
   }
 
   // Methode zum Überprüfen, ob der Benutzer eingeloggt bleibt
@@ -120,8 +120,9 @@ class AuthProvider extends ChangeNotifier {
       await _auth.setPersistence(Persistence.LOCAL);
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        print('Keep logged in error: $e');
       }
+      // Fehlerbehandlung, um dem Benutzer Feedback zu geben
     }
   }
 }

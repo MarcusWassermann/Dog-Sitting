@@ -1,5 +1,3 @@
-// widgets/message_list.dart
-
 import 'package:flutter/material.dart';
 
 class MessageList extends StatelessWidget {
@@ -27,16 +25,19 @@ class MessageList extends StatelessWidget {
             onDismissed: (direction) => onDismissed(index),
             background: Container(color: Colors.red),
             child: Container(
-              padding: const EdgeInsets.all(10.0),
-              margin:
-                  const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+              padding: const EdgeInsets.all(20.0), // Größere Innenpolsterung
+              margin: const EdgeInsets.symmetric(
+                  vertical: 10.0, horizontal: 20.0), // Größere Ränder
               decoration: BoxDecoration(
                 color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius:
+                    BorderRadius.circular(20.0), // Größere abgerundete Ecken
               ),
               child: Text(
                 message,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0), // Größere Schriftgröße
               ),
             ),
           );

@@ -16,7 +16,7 @@ class AppWayScreen extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true, // Ensure the body extends behind the AppBar
       appBar: AppBar(
-        title: const Text('App Weg'),
+        title: const Text('Wegweiser'),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -29,126 +29,129 @@ class AppWayScreen extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(
-                top: kToolbarHeight + 20.0, left: 20.0, right: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.black),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+                top: kToolbarHeight + 20.0,
+                left: 20.0,
+                right: 20.0,
+                bottom: 20.0 // Added bottom padding
                 ),
-                const SizedBox(height: 5),
-                ButtonWidgets.buildButton(
-                  context,
-                  'Favoriten',
-                  Icons.favorite,
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const FavoriteScreen(),
-                      ),
-                    );
-                  },
-                  Alignment.centerLeft,
-                ),
-                const SizedBox(height: 5),
-                ButtonWidgets.buildButton(
-                  context,
-                  'Einstellungen',
-                  Icons.settings,
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SettingsPage(),
-                      ),
-                    );
-                  },
-                  Alignment.centerRight,
-                ),
-                const SizedBox(height: 5),
-                ButtonWidgets.buildSitterProfileButton(context),
-                const SizedBox(height: 5),
-                ButtonWidgets.buildButton(
-                  context,
-                  'Notfallkontakt',
-                  Icons.emergency,
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const EmergencyContactScreen(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                      height:
+                          40), // Space added to offset the removed IconButton
+                  ButtonWidgets.buildButton(
+                    context,
+                    'Favoriten',
+                    Icons.favorite,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FavoriteScreen(),
+                        ),
+                      );
+                    },
+                    Alignment.centerLeft,
+                  ),
+                  const SizedBox(height: 5),
+                  ButtonWidgets.buildButton(
+                    context,
+                    'Einstellungen',
+                    Icons.settings,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SettingsPage(),
+                        ),
+                      );
+                    },
+                    Alignment.centerRight,
+                  ),
+                  const SizedBox(height: 5),
+                  ButtonWidgets.buildSitterProfileButton(context),
+                  const SizedBox(height: 5),
+                  ButtonWidgets.buildButton(
+                    context,
+                    'Notfallkontakt',
+                    Icons.emergency,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EmergencyContactScreen(
                             contactName: 'Notfallkontakt',
-                            documentId: 'DEINE_DOCUMENT_ID'),
-                      ),
-                    );
-                  },
-                  Alignment.centerRight,
-                ),
-                const SizedBox(height: 5),
-                ButtonWidgets.buildButton(
-                  context,
-                  'Galerie',
-                  Icons.photo_library,
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const GalleryPage(),
-                      ),
-                    );
-                  },
-                  Alignment.centerLeft,
-                ),
-                const SizedBox(height: 5),
-                ButtonWidgets.buildButton(
-                  context,
-                  'Anzeigen',
-                  Icons.view_list,
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CustomListViewScreen(),
-                      ),
-                    );
-                  },
-                  Alignment.centerRight,
-                ),
-                const SizedBox(height: 5),
-                ButtonWidgets.buildButton(
-                  context,
-                  'Anzeigen aufgeben',
-                  Icons.add_box,
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AdvertisementPage(),
-                      ),
-                    );
-                  },
-                  Alignment.centerLeft,
-                ),
-                const SizedBox(height: 5),
-                ButtonWidgets.buildButton(
-                  context,
-                  'Sitter',
-                  Icons.pets,
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfileListView(),
-                      ),
-                    );
-                  },
-                  Alignment.centerRight,
-                ),
-              ],
+                            documentId: 'DEINE_DOCUMENT_ID',
+                          ),
+                        ),
+                      );
+                    },
+                    Alignment.centerRight,
+                  ),
+                  const SizedBox(height: 5),
+                  ButtonWidgets.buildButton(
+                    context,
+                    'Galerie',
+                    Icons.photo_library,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const GalleryPage(),
+                        ),
+                      );
+                    },
+                    Alignment.centerLeft,
+                  ),
+                  const SizedBox(height: 5),
+                  ButtonWidgets.buildButton(
+                    context,
+                    'Anzeigen',
+                    Icons.view_list,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CustomListViewScreen(),
+                        ),
+                      );
+                    },
+                    Alignment.centerRight,
+                  ),
+                  const SizedBox(height: 5),
+                  ButtonWidgets.buildButton(
+                    context,
+                    'Anzeigen aufgeben',
+                    Icons.add_box,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AdvertisementPage(),
+                        ),
+                      );
+                    },
+                    Alignment.centerLeft,
+                  ),
+                  const SizedBox(height: 5),
+                  ButtonWidgets.buildButton(
+                    context,
+                    'Sitter',
+                    Icons.pets,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfileListView(),
+                        ),
+                      );
+                    },
+                    Alignment.centerRight,
+                  ),
+                ],
+              ),
             ),
           ),
         ],
