@@ -3,32 +3,37 @@ import 'package:flutter/foundation.dart';
 
 class EmergencyContactProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String _phoneNumber = '';
 
-  String get phoneNumber => _phoneNumber;
-
-  Future<void> fetchEmergencyContact(String currentUserDocumentId) async {
+  Future<List<String>> fetchEmergencyContact(
+      String currentUserDocumentId, String userZipCode) async {
     try {
       final QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
           .collection('profiles')
           .where('emergencyContact', isEqualTo: true)
-          .limit(1)
           .get();
 
-      if (snapshot.docs.isNotEmpty) {
-        final data = snapshot.docs.first.data();
-        _phoneNumber = data['phoneNumber'] ?? '';
-      } else {
-        _phoneNumber = '';
+      final List<String> phoneNumbers = [];
+
+      for (final doc in snapshot.docs) {
+        final Map<String, dynamic> data = doc.data();
+        final phoneNumber = data['phoneNumber'] as String?;
+        final postcode = data['zipCode'] as String?;
+        final postcodePrefix = userZipCode.substring(
+            0, 2); // Extrahiere die ersten beiden Ziffern der Benutzer-PLZ
+
+        if (phoneNumber != null &&
+            postcode != null &&
+            postcode.startsWith(postcodePrefix)) {
+          phoneNumbers.add(phoneNumber);
+        }
       }
 
-      notifyListeners();
+      return phoneNumbers;
     } catch (error) {
       if (kDebugMode) {
-        print('Error fetching emergency contact: $error');
+        print('Error fetching emergency contacts: $error');
       }
-      _phoneNumber = '';
-      notifyListeners();
+      return []; // Return an empty list in case of error
     }
   }
 }

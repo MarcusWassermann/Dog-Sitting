@@ -8,7 +8,7 @@ import 'package:dogs_sitting/provider/profile_favoriten_provider.dart';
 class FavoriteListItem extends StatelessWidget {
   final dynamic favorite;
 
-  const FavoriteListItem({Key? key, required this.favorite}) : super(key: key);
+  const FavoriteListItem({super.key, required this.favorite});
 
   @override
   Widget build(BuildContext context) {

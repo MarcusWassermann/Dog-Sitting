@@ -17,21 +17,15 @@ class ProfileFavoriteProvider extends ChangeNotifier {
 
   Future<void> _loadFavorites() async {
     await _initPrefs();
-    final favoritesData = _prefs.getString('favorites');
-    if (kDebugMode) {
-      print('Favorites Data: $favoritesData');
-    } // Debugging-Ausgabe hinzugefügt
+    final favoritesData = _prefs.getString('profileFavorites');
     if (favoritesData != null) {
       final List<dynamic> decodedData = jsonDecode(favoritesData);
       _favorites.addAll(decodedData.map((e) => UserProfile.fromJson(e)));
-      if (kDebugMode) {
-        print('Loaded favorites: $_favorites');
-      } // Debugging-Ausgabe hinzugefügt
       notifyListeners();
     }
   }
 
-  List<UserProfile> get favorites => _favorites;
+  List<UserProfile> get favorites => List.from(_favorites);
 
   bool isFavorite(UserProfile profile) {
     return _favorites.contains(profile);
@@ -39,20 +33,26 @@ class ProfileFavoriteProvider extends ChangeNotifier {
 
   Future<void> addToFavorites(UserProfile profile) async {
     await _initPrefs();
-    _favorites.add(profile);
-    _saveFavorites();
-    notifyListeners();
+    if (!_favorites.contains(profile)) {
+      _favorites.add(profile);
+      await _saveFavorites();
+      notifyListeners();
+    }
   }
 
   Future<void> removeFromFavorites(UserProfile profile) async {
     await _initPrefs();
-    _favorites.remove(profile);
-    _saveFavorites();
-    notifyListeners();
+    if (_favorites.contains(profile)) {
+      _favorites.remove(profile);
+      await _saveFavorites();
+      notifyListeners();
+    }
   }
 
   Future<void> _saveFavorites() async {
-    final encodedData = jsonEncode(_favorites);
-    await _prefs.setString('favorites', encodedData);
+    await _initPrefs();
+    final encodedData =
+        jsonEncode(_favorites.map((profile) => profile.toJson()).toList());
+    await _prefs.setString('profileFavorites', encodedData);
   }
 }

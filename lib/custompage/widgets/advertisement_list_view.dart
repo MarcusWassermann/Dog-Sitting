@@ -6,7 +6,7 @@ import 'package:dogs_sitting/provider/favoriten_provider.dart';
 class AdvertisementListView extends StatelessWidget {
   final List<UserText> advertisements;
 
-  const AdvertisementListView({Key? key, required this.advertisements});
+  const AdvertisementListView({super.key, required this.advertisements});
 
   @override
   Widget build(BuildContext context) {

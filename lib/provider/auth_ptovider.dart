@@ -16,6 +16,7 @@ class AuthProvider extends ChangeNotifier {
       await _auth.signInWithEmailAndPassword(
           email: username, password: password);
       isLoggedIn = true;
+      await keepLoggedIn(); // Hier wird die Funktion keepLoggedIn aufgerufen
       notifyListeners();
     } catch (e) {
       if (kDebugMode) {
@@ -29,6 +30,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       isLoggedIn = true;
+      await keepLoggedIn(); // Hier wird die Funktion keepLoggedIn aufgerufen
       notifyListeners();
     } catch (e) {
       if (kDebugMode) {
@@ -97,6 +99,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       isLoggedIn = true;
+      await keepLoggedIn(); // Hier wird die Funktion keepLoggedIn aufgerufen
       notifyListeners();
     } catch (e) {
       if (kDebugMode) {
@@ -109,5 +112,16 @@ class AuthProvider extends ChangeNotifier {
   void login() {
     isLoggedIn = true;
     notifyListeners();
+  }
+
+  // Methode zum Überprüfen, ob der Benutzer eingeloggt bleibt
+  Future<void> keepLoggedIn() async {
+    try {
+      await _auth.setPersistence(Persistence.LOCAL);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 }

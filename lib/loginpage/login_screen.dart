@@ -1,5 +1,5 @@
-
 // ignore_for_file: library_private_types_in_public_api
+
 
 import 'package:dogs_sitting/provider/auth_ptovider.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (username.isNotEmpty && password.isNotEmpty) {
       try {
-        authProvider.signIn(username, password);
+        authProvider.signInWithUsernameAndPassword(username, password);
         if (authProvider.isLoggedIn) {
           Navigator.pushReplacement(
             context,
