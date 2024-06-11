@@ -45,6 +45,12 @@ flutter:
     - assets/16.png
     - assets/17.png
     - assets/18.png
+    - assets/19.png
+    - assets/20.png
+    - assets/21.png
+    - assets/23.png
+    - assets/24.png
+    - assets/25.png
     - assets/123.png
 flutter_icons:
   android: true

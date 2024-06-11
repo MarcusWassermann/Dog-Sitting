@@ -1,5 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:dogs_sitting/registrationpage/logic/registration_logic.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationForm extends StatefulWidget {
@@ -57,9 +58,18 @@ class _RegistrationFormState extends State<RegistrationForm> {
     });
   }
 
-  void _registerUser() {
+  void _registerUser() async {
     // Implementierung der Benutzerregistrierung
-    widget.onRegistrationSuccess();
+    await RegistrationLogic.registerUser(
+      context: context,
+      username: _usernameController.text,
+      firstName: _firstNameController.text,
+      lastName: _lastNameController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+      passwordRepeat: _passwordRepeatController.text,
+      onSuccess: widget.onRegistrationSuccess,
+    );
   }
 
   InputDecoration _inputDecoration({

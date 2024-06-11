@@ -41,11 +41,12 @@ class _ProfileListViewState extends State<ProfileListView> {
     }
   }
 
-  void search(String value) async {
+  Future<void> search(String value) async {
     if (value.isNotEmpty) {
+      final searchQuery = value.substring(0, 2);
       try {
         List<UserProfile> fetchedProfiles =
-            await ProfileRepository().searchProfilesByZipCode(value);
+            await ProfileRepository().searchProfilesByZipCode(searchQuery);
         setState(() {
           profiles = fetchedProfiles;
         });
@@ -94,6 +95,10 @@ class _ProfileListViewState extends State<ProfileListView> {
             ),
             style: const TextStyle(color: Colors.black),
             onChanged: search,
+            onSubmitted: (value) {
+              // Nachdem die Suche durchgeführt wurde, Suchleiste leeren
+              _searchController.clear();
+            },
           ),
         ),
       ),

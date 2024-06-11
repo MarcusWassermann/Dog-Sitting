@@ -47,7 +47,8 @@ class _CustomListViewScreenState extends State<CustomListViewScreen> {
 
   void initiateSearch() async {
     setState(() {
-      searchQuery = _searchController.text;
+      searchQuery = _searchController.text
+          .substring(0, 2); // Extrahiere die ersten beiden Zeichen
     });
     _searchController.clear();
 
@@ -56,7 +57,8 @@ class _CustomListViewScreenState extends State<CustomListViewScreen> {
           await CustomRepository().getAdvertisements();
       List<UserText> filteredAdvertisements =
           fetchedAdvertisements.where((advertisement) {
-        return advertisement.postcode.contains(searchQuery);
+        return advertisement.postcode.startsWith(
+            searchQuery); // Suche nach den ersten beiden Zeichen der Postleitzahl
       }).toList();
       setState(() {
         advertisements = filteredAdvertisements;

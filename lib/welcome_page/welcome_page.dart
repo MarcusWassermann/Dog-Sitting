@@ -30,7 +30,7 @@ class WelcomePage extends StatelessWidget {
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/18.png'),
+                  image: AssetImage('assets/20.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -55,7 +55,7 @@ class WelcomePage extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(
-                                  0.3), // Hellerer Hintergrund des Containers
+                                  0.1), // Hellerer Hintergrund des Containers
                               borderRadius: BorderRadius.circular(
                                   20.0), // Abrundung der Ecken
                               border: Border.all(
@@ -82,8 +82,8 @@ class WelcomePage extends StatelessWidget {
                               'Bitte beachten Sie: Dog Sitting ist nicht nur eine Plattform - sie ist ein Zuhause für Hundeliebhaber. Hier geht es darum, Beziehungen aufzubauen, Vertrauen zu schaffen und sich gegenseitig zu unterstützen. Wir möchten, dass Sie sich wie in einer großen, liebevollen Familie fühlen, in der jeder Hund geliebt und geschätzt wird.\n\n'
                               'Tritt heute unserer Familie bei und erlebe die Freude, die entsteht, wenn Menschen und Hunde sich gegenseitig bereichern und unterstützen.',
                               style: TextStyle(
-                                color: Color.fromARGB(255, 16, 13,
-                                    13), // Schriftfarbe in Schwarz ändern
+                                color:
+                                    Color.fromARGB(255, 221, 225, 229), // Schriftfarbe in Blau ändern
                                 fontSize: 18.0,
                                 fontWeight:
                                     FontWeight.bold, // Schrift fett machen

@@ -34,7 +34,7 @@ class FavoriteScreen extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            'assets/9.png',
+            'assets/19.png',
             fit: BoxFit.cover,
           ),
           ListView.builder(

@@ -36,9 +36,17 @@ class ProfileRepository {
       debugPrint(
           'searchProfilesByZipCode() erhalten mit zipCode: $zipCode'); // Hinzugefügt für Debugging
 
+      String searchQuery = zipCode.substring(
+          0, 2); // Die ersten beiden Zeichen des zipCode erhalten
+
       QuerySnapshot querySnapshot = await _firestore
           .collection('profiles')
-          .where('zipCode', isEqualTo: zipCode)
+          .where('zipCode',
+              isGreaterThanOrEqualTo:
+                  searchQuery) // Zipcodes beginnen mit den ersten beiden Zeichen
+          .where('zipCode',
+              isLessThan:
+                  '${searchQuery}z') // Zipcodes enden vor dem nächsten Präfix
           .get();
 
       if (kDebugMode) {

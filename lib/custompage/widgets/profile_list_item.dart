@@ -8,9 +8,9 @@ class ProfileListItem extends StatelessWidget {
   final UserProfile profile;
 
   const ProfileListItem({
-    Key? key,
+    super.key,
     required this.profile,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
